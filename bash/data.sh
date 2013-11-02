@@ -11,9 +11,10 @@ cat ../data/station_data.csv | cut -d, -f1-3 > ../data/station_data_cut.csv
 grep 2011- station_data_cut.csv > station_data_2011.csv
 grep 2011- measurements_cut.csv > measurements_2011.csv
 
-## subset gov data from Fukushima, Ibaraki, Miyagi,
+## remove japanese columns from station_id.csv
+cat ../data/station_id.csv | cut -d, -f1,2,4,7,12,13 > ../data/station_id_cut.csv
 
-## convert station_id to lat lon
+## subset gov data from Fukushima, Ibaraki, Miyagi,
 
 # fukushima daiichi
 # 37deg25'22.7'' N 141deg01' 58.5'' 
