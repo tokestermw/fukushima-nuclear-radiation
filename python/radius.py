@@ -12,6 +12,8 @@ Wayne Dyck's implementation of the Haversine formuula
 http://www.platoscave.net/blog/2009/oct/5/calculate-distance-latitude-longitude-python/
 """
 
+FUKUSHIMA_DAIICHI = (37.422972, 141.032917)
+
 from math import radians, sin, cos, atan2, sqrt
 
 def scan(startpoint, endpoint, km):
@@ -33,7 +35,18 @@ def scan(startpoint, endpoint, km):
     a = sin(dlat/2) * sin(dlat/2) + cos(radians(latA)) \
       * cos(math.radians(latB)) * sin(dlon/2) * sin(dlon/2)
     c = 2 * atan2(sqrt(a), sqrt(1-a))
-    
+
     dist = radius * c
 
     return km - dist > 0
+
+import os
+
+def append_scan_to_data(fname, column):
+    with open(fname) as f:
+        for line in f:
+            
+    scan()
+    pass
+
+if __name__ == '__main__':
