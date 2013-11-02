@@ -16,8 +16,4 @@ cat ../data/station_id.csv | cut -d, -f1,2,4,7,12,13 > ../data/station_id_cut.cs
 
 ## subset gov data from Fukushima, Ibaraki, Miyagi,
 
-# fukushima daiichi
-# 37deg25'22.7'' N 141deg01' 58.5'' 
-# 37.422972,141.032917
-# check radius
-# http://www.movable-type.co.uk/scripts/latlong.html
+## remove all intermediate files to save harddrive space
