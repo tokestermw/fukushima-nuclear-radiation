@@ -9,6 +9,9 @@ cat ../data/station_data.csv | cut -d, -f1-3 > ../data/station_data_cut.csv
 grep 2011- station_data_cut.csv > station_data_2011.csv
 grep 2011- measurements_cut.csv > measurements_2011.csv
 
+## remove empty measurements 
+sed '/,,/d' measurements_2011.csv > measurements_2011_temp.csv && mv measurements_2011_temp.csv measurements_2011.csv
+
 ## remove the commas from Horiguchi, Hitachinaka City and Ishikawa, Mito
 awk '{gsub("guchi, Hitachi", "guchi Hitachi", $0); print;}' station_id.csv > station_idtemp.csv && mv station_idtemp.csv station_id.csv
 awk '{gsub("kawa, Mito", "kawa Mito", $0); print;}' station_id.csv > station_idtemp.csv && mv station_idtemp.csv station_id.csv
@@ -19,10 +22,9 @@ cat ../data/station_id.csv | cut -d, -f1,2,4,7,12,13 > ../data/station_id_cut.cs
 ## now run ../sql/data.sql to join the station_id and station_data
 
 ## run ../python/radius.py, to subset wrt radius
-../python/radius.py 'station_join.csv' 1 80
-mv ../data/newcolumn.csv ../data/
+../python/radius.py 'station_join.csv' 1 100
 
-../python/radius.py 'measurements_2011.csv' 1 80
+../python/radius.py 'measurements_2011.csv' 1 100
 
 ## paste it to new data, 
 

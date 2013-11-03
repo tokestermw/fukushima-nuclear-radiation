@@ -44,23 +44,24 @@ def scan(startpoint, endpoint, km):
 
 def append_scan_to_data(fname, column, km):
     """
-    Adds TRUE FALSE column if lat lon is close enough to fukushima daiichi.
-
+    Subsets data wrt space and outputs to *_subset.csv.
+    lat, lon data need to be in consecutive columns in that order. 
     """
     lat, lon = [column, column + 2]
     with open(fname) as f:
-        c = open("newcolumn.csv", 'w')
+        c = open(fname[:-4] + '_subset.csv', 'w')
         for line in f:
             splt = line.split(',')
             endpoint = tuple([float(i) for i in splt[lat:lon]])
-            isMeasurementClose = scan(FUKUSHIMA_DAIICHI, endpoint, km)
-            c.write(str(isMeasurementClose) + '\n')
+            within = scan(FUKUSHIMA_DAIICHI, endpoint, km)
+            if within:
+                c.write(line)
 
         c.close()
-    return isMeasurementClose
+    return True
 
 if __name__ == '__main__':
-    print 'Make sure to remove or rename newcolumn.csv first'
+    print 'Make sure to remove or rename *_subset.csv first'
 
     script_path, fname, column, km = sys.argv
     append_scan_to_data(fname, int(column), float(km))
