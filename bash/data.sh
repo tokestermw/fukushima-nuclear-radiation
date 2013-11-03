@@ -21,15 +21,10 @@ cat ../data/station_id.csv | cut -d, -f1,2,4,7,12,13 > ../data/station_id_cut.cs
 
 ## now run ../sql/data.sql to join the station_id and station_data
 
-## run ../python/radius.py, to subset wrt radius
-../python/radius.py 'station_join.csv' 1 100
+## run ../python/data.py, to subset wrt radius
+../python/data.py 'station_join.csv' 1 100
 
-../python/radius.py 'measurements_2011.csv' 1 100
-
-## paste it to new data, 
-
-## and cut if you want to remove it
-
+../python/data.py 'measurements_2011.csv' 1 100
 
 ## remove all intermediate files to save harddrive space
 
