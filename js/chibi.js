@@ -1,5 +1,14 @@
 function initialize() {
     
+    function getCircle(magnitude) {
+	var circle = {
+	    path: google.maps.SymbolPath.CIRCLE,
+	    scale: magnitude,
+	    position: new google.maps.LatLng(37.422972, 141.032917)
+	};
+	return circle;
+    }
+
     var map = new google.maps.Map(document.getElementById('map-canvas'), {
 	center: new google.maps.LatLng(37.422972, 141.032917),
 	zoom: 10,
@@ -12,18 +21,18 @@ function initialize() {
 	    from: '1Z7Y_HhPKGagG0pFoKfwDqyNyZYQ7EUgLf9wGUSY'
 	},
 	
-    });
-    
-    function getCircle(magnitude) { 
-	var circle = {
-	    path: google.maps.SymbolPath.CIRCLE,
-	    scale: magnitude
-	};
-	return circle;
-    }
-    
-    
-    
+	styles: [{
+	    polygonOptions: {
+		fillColor: "#00FF00",
+		fillOpacity: 0.3
+	    }
+	}, {
+	    markerOptions: {
+	 	iconName: "small_green"
+	    }
+	}]
+    });    
+
     layer.setMap(map);
 }
 
