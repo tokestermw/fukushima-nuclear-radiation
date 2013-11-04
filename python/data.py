@@ -12,7 +12,6 @@
 # Wayne Dyck's implementation of the Haversine formuula
 # http://www.platoscave.net/blog/2009/oct/5/calculate-distance-latitude-longitude-python/
 
-
 FUKUSHIMA_DAIICHI = (37.422972, 141.032917)
 RADIUS = 6371 # Earth's radius (km)
 
