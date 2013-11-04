@@ -4,6 +4,23 @@
 # 3. reduce autocorrelation for the interpolation
 # 4. provide a way to play with different filters
 
+import sqlite3 as sql
+import math
+import numpy as np
+
+conn = sql.connect("../data/station_join.db")
+
+conn.create_function('log', 1, np.log)
+
+def filt(x):
+    # use a numpy array
+    ind = x > 0.0
+    return np.mean(np.log(x[ind]))
+
+conn.create_function('filter', 1, filt)
+
+c = conn.cursor()
+
 class Filter:
 
     def __init__(self, group_type):
@@ -12,4 +29,3 @@ class Filter:
 
     def avg():
         pass
-
