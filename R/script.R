@@ -3,7 +3,7 @@
 
 library(data.table)
 
-df <- read.csv("data/station_join_sub.csv", header = FALSE)
+df <- read.csv("data/station_day_avg.csv", header = FALSE)
 names(df) <- c("station_id", "lat", "lon", "datetime", "val")
 
 dt <- data.table(df)
@@ -69,19 +69,20 @@ coordinates(grd) = ~ y + x
 i <- idw(val ~ 1, e, grd)
 
 # idw.pdf
-spplot(i["var1.pred"])
+spplot(i["var1.pred"], cuts = 10, scales = list(draw = TRUE),
+       col.regions = heat.colors(100), pretty = TRUE, contour = TRUE)
 
-g <- gstat(id = "radiation", formula = log(val) ~ 1, data = e)
+g <- gstat(id = "radiation", formula = val ~ 1, data = e)
 
-plot(variogram(g, map=TRUE, cutoff=.2, width=200))
+#plot(variogram(g, map=TRUE, cutoff=.2, width=200))
 
 # variograms from four directions
 v <- variogram(g, alpha = c(0, 45, 90, 135))
 
 # variogram.pdf
-plot(v[v$dist != 0, ], ylim = c(-1, max(v$gamma)))
+plot(v, ylim = c(-1, max(v$gamma)))
 
-v.fit <- fit.variogram(v[v$dist != 0, ], model = vgm(model = "Lin"))
+v.fit <- fit.variogram(v, model = vgm(model = "Lin"))
 
 ## not enough spatially correlated points to get a good kriging going!
 
@@ -89,4 +90,8 @@ g2 <- gstat(g, id = "radiation", model = v.fit)
 
 p <- predict(g2, model = v.fit, newdata = grd)
 
-spplot(p, zcol = 'radiation.pred', cuts = 10)
+spplot(p, zcol = 'radiation.pred', cuts = 10, scales = list(draw = TRUE),
+       col.regions = heat.colors(100), pretty = TRUE, contour = TRUE)
+
+## get data this way
+# c(p@coords, p$radiation.pred, p$radiation.var)
