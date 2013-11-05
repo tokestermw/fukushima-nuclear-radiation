@@ -35,3 +35,46 @@ dt2 <- data.table(df2)
 rm(df2)
 
 idatetime2 <- IDateTime(dt2$datetime)
+
+## plot compare to station_join
+plot(idatetime2$idate, dt2$val, pch = '.')
+
+## -----------------------------------
+## Now go into inverse distance weighting, ordinary kriging
+## http://casoilresource.lawr.ucdavis.edu/drupal/node/442
+
+library(gstat)
+library(sp)
+
+dt.unique <- dt[, list(lat = unique(lat), lon = unique(lon)), by = list(station_id)]
+
+e <- dt[idatetime$idate == "2011-02-28", list(lat, lon, val)]
+coordinates(e) <- ~ lon + lat
+
+# bubble.pdf
+bubble(e, zcol = "val")
+
+x.range <- seq(min(dt$lat), max(dt$lat), len = 100)
+y.range <- seq(min(dt$lon), max(dt$lon), len = 100)
+
+grd <- expand.grid(x = x.range, y = y.range)
+
+# grid.pdf
+plot(grd, cex = .2, pch = 2)
+points(dt.unique[, list(lat, lon)], pch = 16, col = "red", cex = 1)
+
+coordinates(grd) = ~ y + x
+i <- idw(val ~ 1, e, grd)
+
+# idw.pdf
+spplot(i["var1.pred"])
+
+g <- gstat(id = "radiation", formula = val ~ 1, data = e)
+
+# variograms from four directions
+v <- variogram(g, alpha = c(0, 45, 90, 135))
+
+plot(v)
+
+v.fit <- fit.variogram(v, model = vgm(model = "Lin"))
+
