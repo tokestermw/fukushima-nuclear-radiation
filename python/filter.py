@@ -3,29 +3,44 @@
 # 2. reduce the dataset for the maps
 # 3. reduce autocorrelation for the interpolation
 # 4. provide a way to play with different filters
+# 5. kriging just doesn't perform well with duplicate points!
 
 import sqlite3 as sql
 import math
-import numpy as np
 
 conn = sql.connect("../data/station_join.db")
 
-conn.create_function('log', 1, np.log)
-
-def filt(x):
-    # use a numpy array
-    ind = x > 0.0
-    return np.mean(np.log(x[ind]))
-
-conn.create_function('filter', 1, filt)
+conn.create_function('log', 1, math.log)
 
 c = conn.cursor()
 
-class Filter:
+## now average group by station_id and date
+# get rid of quotes around the date strings
+c.execute("""
+update station_join set datetime=trim(replace(datetime, """", ""));
+""")
 
-    def __init__(self, group_type):
-        self.group_type = group_type
-        pass
+# make it a date
+c.execute("""
+update station_join set datetime=strftime('%Y-%m-%d', datetime);
+""")
 
-    def avg():
-        pass
+# now take average -> log, group by day
+c.execute("""
+create table station_day_avg as
+select station_id, lat, lon, datetime, avg(log(val)) from station_join
+group by datetime, station_id;
+""")
+
+# then output to a csv
+c.execute("""
+.mode csv
+.output station_day_avg.csv
+select * from station_day_avg;
+.output stdout
+""")
+
+conn.commit()
+
+c.close()
+conn.close()

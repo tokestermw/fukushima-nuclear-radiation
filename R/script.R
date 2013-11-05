@@ -73,6 +73,8 @@ spplot(i["var1.pred"])
 
 g <- gstat(id = "radiation", formula = log(val) ~ 1, data = e)
 
+plot(variogram(g, map=TRUE, cutoff=.2, width=200))
+
 # variograms from four directions
 v <- variogram(g, alpha = c(0, 45, 90, 135))
 
@@ -82,3 +84,9 @@ plot(v[v$dist != 0, ], ylim = c(-1, max(v$gamma)))
 v.fit <- fit.variogram(v[v$dist != 0, ], model = vgm(model = "Lin"))
 
 ## not enough spatially correlated points to get a good kriging going!
+
+g2 <- gstat(g, id = "radiation", model = v.fit)
+
+p <- predict(g2, model = v.fit, newdata = grd)
+
+spplot(p, zcol = 'radiation.pred', cuts = 10)
