@@ -23,6 +23,7 @@ dt.filtered_mean <- dt[, list(val = filt(val)), by = list(station_id)]
 idatetime <- IDateTime(dt$datetime)
 
 ## plot, crap not enough dates in the summer months
+# stationdata.pdf
 plot(idatetime$idate, dt$val, pch = '.')
 
 ## -----------------------------------
@@ -37,6 +38,7 @@ rm(df2)
 idatetime2 <- IDateTime(dt2$datetime)
 
 ## plot compare to station_join
+# measurement.pdf
 plot(idatetime2$idate, dt2$val, pch = '.')
 
 ## -----------------------------------
@@ -48,7 +50,7 @@ library(sp)
 
 dt.unique <- dt[, list(lat = unique(lat), lon = unique(lon)), by = list(station_id)]
 
-e <- dt[idatetime$idate == "2011-02-28", list(lat, lon, val)]
+e <- dt[idatetime$idate == "2011-10-28", list(lat, lon, val)]
 coordinates(e) <- ~ lon + lat
 
 # bubble.pdf
@@ -69,12 +71,14 @@ i <- idw(val ~ 1, e, grd)
 # idw.pdf
 spplot(i["var1.pred"])
 
-g <- gstat(id = "radiation", formula = val ~ 1, data = e)
+g <- gstat(id = "radiation", formula = log(val) ~ 1, data = e)
 
 # variograms from four directions
 v <- variogram(g, alpha = c(0, 45, 90, 135))
 
-plot(v)
+# variogram.pdf
+plot(v[v$dist != 0, ], ylim = c(-1, max(v$gamma)))
 
-v.fit <- fit.variogram(v, model = vgm(model = "Lin"))
+v.fit <- fit.variogram(v[v$dist != 0, ], model = vgm(model = "Lin"))
 
+## not enough spatially correlated points to get a good kriging going!
