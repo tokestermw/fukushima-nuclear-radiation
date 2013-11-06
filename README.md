@@ -1,7 +1,13 @@
-fukushima-nuclear-radiation
+Comparison of Government and Crowd Sourced Radiation Data from the Fukushima Daiichi Nuclear Meltdown
 ===========================
 
-Analysis of nuclear radiation data from the 3/11 Fukushima earthquake.
+## The Problem
+
+The large earthquake off the coast of Fukushima, Japan caused the second largest nuclear disaster since Cherynobyl. A large area around the epicenter were evacuated to reduce the risk of exposure to nuclear radiation. Years after the accident, there is still residual fear of both direct exposure and contamination (especially with foodstuffs and leaking radioactive water into the Pacific Ocean). The fallout from this fear caused a cascading effect on food safety, energy policy, tourism and perception towards government. The actual health effects from radiation is unclear since the effects of radiation is cumulative. The tremendous skepticism towards both the electric company (TEPCO) and the government paralyzes progressive steps to determine the course of action with future nuclear policy.
+
+One area data can assuage these fears is a direct comparison of government and crowd sourced citizen radiation data. Government collects radiation data across Japan and they broadcast them on the website. Radiation readings have especially increased around Fukushima after the earthquake, so interested people can work with the data. But given the public skepticism towards government, it is not sufficient to dispel safety concerns. Safecast is a sensor network completely independent both politically and instrument-wise to provide a valuable check against government data.
+
+The goal of this project visualize the difference between government and crowd sourced data. Increased transparency by the visualization enables the public to get beyond the cynicism to solve real problems.
 
 ## Data
 
