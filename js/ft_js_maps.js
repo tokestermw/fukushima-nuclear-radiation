@@ -38,13 +38,11 @@ function getData(table) {
 
     console.log(queryurl);
 
-    var jqxhr = $.get(queryurl, dataHandler, "jsonp");
+    jqxhr = $.get(queryurl, dataHandler, "jsonp");
 }
 
 
 function dataHandler(d) {
-    console.log('aho');
-    console.log(d);
     // get the actual data out of the JSON object
     var data = d.rows;
     console.log(data);
@@ -63,11 +61,25 @@ function dataHandler(d) {
             position: latlon,
             rowid: i,
             prob: probability,
-            map: mymap
+            map: mymap,
+	    icon: getCircle(probability)
         });
+
         var fn = markerClick(mymap, marker, infoWindow);
         google.maps.event.addListener(marker, 'click', fn);
     }
+}
+
+function getCircle(magnitude) {
+    var circle = {
+	path: google.maps.SymbolPath.CIRCLE,
+	fillColor: 'red',
+	fillOpacity: .2,
+	scale: Math.pow(2, Math.log(magnitude)),
+	strokeColor: 'white',
+	strokeWeight: .5
+    };
+    return circle;
 }
 
 function markerClick(map, m, ifw) {
