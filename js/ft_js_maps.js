@@ -48,9 +48,11 @@ function dataHandler(d) {
     console.log(data);
     infoWindow = new google.maps.InfoWindow();
 
+    // heatmap data
+    var heatmapData = [];
+
     // loop through all rows to add them to the map
     for (var i = 0; i < data.length; i++) {
-
         // Per the expected data format [25,-7.854167,131.3026], 
         // lat is stored in d[row][1] and lon is stored in d[row][2]
         // probability is the first element of the array
@@ -67,14 +69,29 @@ function dataHandler(d) {
 
         var fn = markerClick(mymap, marker, infoWindow);
         google.maps.event.addListener(marker, 'click', fn);
+
+	var weightedLoc = {
+	    location: latlon,
+	    weight: probability	    
+	};
+
+	heatmapData.push(weightedLoc);
     }
+
+    var heatmap = new google.maps.visualization.HeatmapLayer({
+	data: heatmapData,
+	dissipating: true,
+	opacity: .8,
+	map: mymap
+    });
+
 }
 
 function getCircle(magnitude) {
     var circle = {
 	path: google.maps.SymbolPath.CIRCLE,
 	fillColor: 'red',
-	fillOpacity: .2,
+	fillOpacity: .0,
 	scale: Math.pow(2, Math.log(magnitude)),
 	strokeColor: 'white',
 	strokeWeight: .5
