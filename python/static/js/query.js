@@ -58,7 +58,7 @@ function getData(table) {
 function dataHandler(d) {
     // get the actual data out of the JSON object
     var data = d.rows;
-    console.log(data);
+    // console.log(data);
     infoWindow = new google.maps.InfoWindow();
 
     // heatmap data
@@ -92,12 +92,24 @@ function dataHandler(d) {
 
     }
 
+    var data = {data: JSON.stringify(heatmapData)}
+		// JSON.stringify({ "value" : 'asdf'})}
+
+    $.ajax({
+	url:"/query",
+	type: 'POST',
+	data: data,// JSON.stringify(heatmapData),
+	success: function(msg) {
+	    console.log(msg);
+	}
+    })
+
     var heatmap = new google.maps.visualization.HeatmapLayer({
 	data: heatmapData,
 	dissipating: true,
 	opacity: .8,
+	radius: 20,
 	maxIntensity: 10.5,
-	radius: 25,
 	map: mymap
     });
 

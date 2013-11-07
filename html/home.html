@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <title>jQuery Example</title>
+    <script type=text/javascript
+	    src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type=text/javascript>
+      var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+  </head>
+
+  <body>
+    <p>Date: <input type="text" id="datepicker" /> No data from
+      2011-03-12 to 2011-09-20. </p>
+    {% block body %}{% endblock %}
+  </body>
+</html>

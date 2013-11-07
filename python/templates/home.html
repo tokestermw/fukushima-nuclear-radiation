@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <title>jQuery Example</title>
+    <script type=text/javascript
+	    src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type=text/javascript>
+      var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+      console.log($SCRIPT_ROOT);
+    </script>
+    <script src="static/js/query.js"></script>
+  </head>
+
+  <body>
+
+<p>bakbakba</p>
+<script>
+var data = {
+      data: JSON.stringify({
+                        "value":'asdf'
+})
+};
+
+$.ajax({
+   url:"/",
+   type: 'POST',
+   data: data,
+   success: function(msg){
+              console.log(msg);
+            }
+})
+</script>
+
+<!-- <script> -->
+<!-- $(function() { -->
+<!--     $( "#datepicker" ).datepicker({  -->
+<!-- 	defaultDate: new Date(2011, 2-1, 28), -->
+<!-- 	minDate: new Date(2011, 2-1, 28),  -->
+<!-- 	maxDate: new Date(2011, 11-1, 18), -->
+<!-- 	onSelect: function(dateText) { -->
+<!-- 	    demoinit(); -->
+<!-- 	} -->
+<!--     }); -->
+<!-- }); -->
+<!-- </script> -->
+
+    <!-- <p>Date: <input type="text" id="datepicker" /> No data from -->
+    <!--   2011-03-12 to 2011-09-20. </p> -->
+    <!-- <div id="datepicker" style="height: 12px"></div> -->
+
+
+
+    {% block body %}{% endblock %}
+  </body>
+</html>
