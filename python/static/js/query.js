@@ -109,7 +109,7 @@ function dataHandler(d) {
 	dissipating: true,
 	opacity: .8,
 	radius: 20,
-	maxIntensity: 10.5,
+	maxIntensity: 8.5,
 	map: mymap
     });
 

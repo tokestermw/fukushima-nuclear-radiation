@@ -16,8 +16,12 @@
     <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,visualization&v=3.exp&sensor=false"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="../static/js/slider.js"></script>
-    <script src="../static/js/query.js"></script>
+    <script type=text/javascript>
+      var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+      console.log($SCRIPT_ROOT);
+    </script>
+    <script src="static/js/slider.js"></script>
+    <script src="static/js/query.js"></script>
   </head>
   <body>
     <p>Date: <input type="text" id="datepicker" /> No data from
