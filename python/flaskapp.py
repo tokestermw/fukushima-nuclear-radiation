@@ -14,9 +14,9 @@ def query():
 @app.route("/query", methods = ['POST'])
 def get_weightedLoc():
     data = json.loads(request.form.get('data'))
-    #json.dump(data, 'data.json')
-    print data
+    # with open('dump.json', 'w') as outfile:
+    #     json.dump(data, outfile)
     return jsonify(data)
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True)
