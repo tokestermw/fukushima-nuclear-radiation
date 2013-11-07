@@ -20,6 +20,15 @@ function demoinit() {
     mymap = new google.maps.Map(document.getElementById("map-canvas"), options);
 
     getData('1jl5I-8zA1Ijt1wEUYLmB4ji3de5YzHMi_IpfgKI');
+
+    var measurementLayer = new google.maps.FusionTablesLayer({
+	query: {
+	    select: 'Radiation',
+	    from: '10sn4pF_QpPm0JiWQKDeEkOwHxVS3Js5ohmnLgVw'
+	},
+	map: mymap,
+	suppressInfoWindows: true
+    });
 }
 
 function getData(table) {
