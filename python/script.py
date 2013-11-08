@@ -16,6 +16,8 @@ import numpy as np
 
 from scipy.interpolate import Rbf
 
+from itertools import izip
+
 dat = pd.io.parsers.read_csv("../data/station_day_avg.csv")
 dat.columns = ['station_id', 'lat', 'lon', 'date', 'radiation']
 
@@ -28,8 +30,8 @@ val = np.array([i['weight'] for i in js])
 
 # get grid
 cuts = 100
-lat_grd = np.linspace(min(lat), max(lat), cuts)
-lon_grd = np.linspace(min(lon), max(lon), cuts)
+lat_grd = np.linspace(min(lat), max(lat), cuts*2)
+lon_grd = np.linspace(min(lon), max(lon), cuts/2)
 x, y = np.meshgrid(lat_grd, lon_grd)
 
 # fit and interpolate
@@ -43,3 +45,19 @@ plt.scatter(lon, lat, 30, val, cmap = cm.jet)
 plt.colorbar()
 plt.savefig('plots/rbf2d.pdf')
 plt.close()
+
+## plot reshaped data to get back into json
+plt.scatter(np.reshape(x, (-1, 1)), np.reshape(y, (-1, 1)), 5, np.reshape(z, (-1, 1)), cmap = cm.jet)
+plt.savefig('plots/check.pdf')
+plt.close()
+
+## now interpolated dataset back into json
+# i have jsonify
+jsout = []
+xlong = np.reshape(x, (-1, 1))
+ylong = np.reshape(y, (-1, 1))
+zlong = np.reshape(z, (-1, 1))
+for i in xrange(cuts*cuts):
+    jsout.append({'location':{'nb': xlong[i][0], 'ob': ylong[i][0]}, 'weight': zlong[i][0]})
+
+jsout = [{'location': {'nb':i[0][0], 'ob':i[1][0]}, 'weight':i[2][0]} for i in izip(xlong, ylong, zlong)]

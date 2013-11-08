@@ -1,6 +1,8 @@
 """
 I
 """
+import numpy as np
+from itertools import izip
 
 from scipy.interpolate import Rbf
 
@@ -12,11 +14,17 @@ class interpolate:
         self.lat = lat
         self.lon = lon
         self.val = val
+        pass
 
-    def set_area(self):
+    def set_area(self, cuts_lat, cuts_lon):
         """
         Set the bounding box / circle for the interpolation.
         """
+        self.lat_grd = np.linspace(min(self.lat), max(self.lat), cuts_lat)
+        self.lon_grd = np.linspace(min(self.lon), max(self.lon), cuts_lon)
+        x, y = np.meshgrid(self.lat_grd, self.lon_grd)
+        self.x = x
+        self.y = y
         pass
 
     def rbf(self, pickthefunction = "gaussian"):
@@ -34,7 +42,8 @@ class interpolate:
         http://www.altdevblogaday.com/2011/09/04/interpolation-using-radial-basis-functions/
         http://wiki.scipy.org/Cookbook/RadialBasisFunctions
         """
-        Rbf(x = self.lat, y = self.lon, d = self.val, function = pickthefunction)
+        rbf = Rbf(self.lat, self.lon, self.val, function = pickthefunction)
+        self.z = rbf(self.x, self.y)
         pass
 
     def idw():
@@ -45,3 +54,10 @@ class interpolate:
 
     def nn():
         pass
+
+    def convert_gmaps2json(self):
+        xlong = np.reshape(self.x, (-1, 1))
+        ylong = np.reshape(self.y, (-1, 1))
+        zlong = np.reshape(self.z, (-1, 1))
+        
+        return [{'location': {'nb':i[0][0], 'ob':i[1][0]}, 'weight':i[2][0]} for i in izip(xlong, ylong, zlong)]

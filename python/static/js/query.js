@@ -69,7 +69,7 @@ function dataHandler(d) {
         // Per the expected data format [25,-7.854167,131.3026], 
         // lat is stored in d[row][1] and lon is stored in d[row][2]
         // probability is the first element of the array
-        var latlon = new google.maps.LatLng(data[i][1], data[ i][2]);
+        var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
         var probability = data[i][0];
 
         // var marker = new google.maps.Marker({
@@ -93,25 +93,42 @@ function dataHandler(d) {
     }
 
     var data = {data: JSON.stringify(heatmapData)}
-		// JSON.stringify({ "value" : 'asdf'})}
 
     $.ajax({
 	url:"/query",
 	type: 'POST',
 	data: data,// JSON.stringify(heatmapData),
 	success: function(msg) {
-	    console.log(msg);
+	    var interpolatedHeatmapData = [];
+
+	    for (var i = 0; i < msg['out'].length; i++) {
+		var latlon = new google.maps.LatLng(msg['out'][i]['location']['nb'], 
+						    msg['out'][i]['location']['ob']);
+		interpolatedHeatmapData.push({location: latlon, 
+					      weight: msg['out'][i]['weight']});
+	    };
+
+	    var heatmap = new google.maps.visualization.HeatmapLayer({
+		data: interpolatedHeatmapData, // heatmapData,
+		dissipating: true,
+		opacity: .2,
+		radius: 5,
+		maxIntensity: 8.5,
+		map: mymap
+	    });
 	}
     })
 
-    var heatmap = new google.maps.visualization.HeatmapLayer({
-	data: heatmapData,
-	dissipating: true,
-	opacity: .8,
-	radius: 20,
-	maxIntensity: 8.5,
-	map: mymap
-    });
+    console.log(heatmapData[0]);
+
+    // var heatmap = new google.maps.visualization.HeatmapLayer({
+    // 	data: heatmapData,
+    // 	dissipating: true,
+    // 	opacity: .8,
+    // 	radius: 20,
+    // 	maxIntensity: 8.5,
+    // 	map: mymap
+    // });
 
 }
 
