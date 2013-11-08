@@ -44,3 +44,32 @@ conn.commit()
 
 c.close()
 conn.close()
+
+## --
+conn = sql.connect("../data/measurements_2011.db")
+
+conn.create_function('log', 1, math.log)
+
+c = conn.cursor()
+
+# make it a date
+c.execute("""
+update measurements set datetime=strftime('%Y-%m-%d', datetime);
+""")
+
+c.execute("""
+update measurements set val=log(val);
+""")
+
+# then output to a csv
+c.execute("""
+.mode csv
+.output measurements_sub.csv
+select * from measurements;
+.output stdout
+""")
+
+conn.commit()
+
+c.close()
+conn.close()

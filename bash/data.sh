@@ -24,10 +24,14 @@ cat ../data/station_id.csv | cut -d, -f1,2,4,7,12,13 > ../data/station_id_cut.cs
 ## run ../python/data.py, to subset wrt radius
 ../python/data.py '../data/station_join.csv' 1 50
 
-../python/data.py '../data/measurements_2011.csv' 1 50
+../python/data.py '../data/measurements_2011.csv' 1 20
 
-## get rid of all of the -999 values
+## get rid of all of the -999 values from gov data
 sed '/-999/d' ../data/station_join_subset.csv > ../data/station_join_sub.csv
 
+## from the measurements_sub.csv final dataset, thin by x, too much data
+cat measurements_sub.csv | awk 'NR % 20 == 1' > measurements_thin.csv
+
 ## remove all intermediate files to save harddrive space
+
 

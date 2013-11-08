@@ -28,7 +28,7 @@ def get_weightedLoc():
     smooth.rbf()
 
     out = smooth.convert_gmaps2json()
-    return jsonify(out = out) #jsonify(boing = 'aho')
+    return jsonify(out = out) 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
