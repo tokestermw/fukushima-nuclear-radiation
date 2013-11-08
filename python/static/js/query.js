@@ -76,7 +76,6 @@ function dataHandler(d) {
     // get the actual data out of the JSON object
     var data = d.rows;
     // console.log(data);
-    infoWindow = new google.maps.InfoWindow();
 
     // heatmap data
     var heatmapData = [];
@@ -98,22 +97,24 @@ function dataHandler(d) {
 
     var data = {data: JSON.stringify(heatmapData)}
 
-    $.ajax({
-	url:"/query",
-	type: 'POST',
-	data: data,// JSON.stringify(heatmapData),
-	success: function(msg) {
-	    var interpolatedHeatmapData = [];
-
-	    for (var i = 0; i < msg['out'].length; i++) {
-		var latlon = new google.maps.LatLng(msg['out'][i]['location']['nb'], 
-						    msg['out'][i]['location']['ob']);
-		interpolatedHeatmapData.push({location: latlon, 
-					      weight: msg['out'][i]['weight']});
-	    };
-
-	}
-    })
+    if (false) {
+	$.ajax({
+	    url:"/query",
+	    type: 'POST',
+	    data: data,// JSON.stringify(heatmapData),
+	    success: function(msg) {
+		var interpolatedHeatmapData = [];
+		
+		for (var i = 0; i < msg['out'].length; i++) {
+		    var latlon = new google.maps.LatLng(msg['out'][i]['location']['nb'], 
+							msg['out'][i]['location']['ob']);
+		    interpolatedHeatmapData.push({location: latlon, 
+						  weight: msg['out'][i]['weight']});
+		};
+		
+	    }
+	})
+    }
 
     console.log({heatmapData: heatmapData});
 
@@ -122,7 +123,7 @@ function dataHandler(d) {
     	dissipating: true,
     	opacity: .5,
     	radius: 22,
-    	maxIntensity: 20,
+    	maxIntensity: 25,
     	map: mymap
     });
 
@@ -131,13 +132,14 @@ function dataHandler(d) {
 function dataHandler2(d) {
     console.log(d);
     var data = d.rows;
+    infoWindow = new google.maps.InfoWindow();
 
     for (var i = 0; i < data.length; i++) {
 	(function(i, data) {
 	    setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
 		var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
 		var probability = data[i][0];
-		
+
 		var marker = new google.maps.Marker({
 		    position: latlon,
 		    rowid: i,
@@ -147,7 +149,13 @@ function dataHandler2(d) {
 		    map: mymap
 		    // icon: getCircle(200)
 		});
+		
+		google.maps.event.addListener(marker, 'click', function() {
+		    markerClick(mymap, marker, infoWindow)
+		});
+
 	    }, i *  Math.min(10 * 1000 / data.length, 200));
+
 	}(i, data));
     }
 }
@@ -157,7 +165,7 @@ function getCircle(magnitude) {
 	path: google.maps.SymbolPath.CIRCLE,
 	fillColor: 'red',
 	fillOpacity: .5,
-	scale: Math.pow(2, magnitude) * Math.pi * 2,
+	scale: Math.pow(1.5, magnitude) * Math.pi * 2,
 	strokeColor: 'white',
 	strokeWeight: 0
     };
