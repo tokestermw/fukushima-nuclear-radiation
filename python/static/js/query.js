@@ -19,15 +19,11 @@ function demoinit() {
 
     mymap = new google.maps.Map(document.getElementById("map-canvas"), options);
 
-    getData('1jl5I-8zA1Ijt1wEUYLmB4ji3de5YzHMi_IpfgKI', 1);
-
     // getData('10sn4pF_QpPm0JiWQKDeEkOwHxVS3Js5ohmnLgVw', 2);
 
     // getData('1494If6PzpFbIxn5dmLtZY2KqTAPtNRJPAl3VL0w', 2);
 
     // getData('1BRq9Wvu9yPTov_nfrf9xyUlmbPgG_8B8aA_i3uQ', 2);
-
-    getData('15a9rZ0qPnjGW59nBWBd0KgR8hDyVct1KNX_pKwA', 2);
 
     // var measurementLayer = new google.maps.FusionTablesLayer({
     // 	query: {
@@ -37,12 +33,26 @@ function demoinit() {
     // 	map: mymap,
     // 	suppressInfoWindows: true
     // });
+
+    // getData('1jl5I-8zA1Ijt1wEUYLmB4ji3de5YzHMi_IpfgKI', 1);
+
+    // getData('15a9rZ0qPnjGW59nBWBd0KgR8hDyVct1KNX_pKwA', 2);
+
+    var govURL = getQueryURL('1jl5I-8zA1Ijt1wEUYLmB4ji3de5YzHMi_IpfgKI');
+    var citURL = getQueryURL('15a9rZ0qPnjGW59nBWBd0KgR8hDyVct1KNX_pKwA');
+
+    function runGov() {
+	console.log(govURL);
+	return $.get(govURL, dataHandler, "jsonp");
+    }
+
+    $.when(runGov()).done(function() {
+	return $.get(citURL, dataHandler2, "jsonp");
+    });
+
 }
 
-function getData(table, which) {
-    // Builds a Fusion Tables SQL query and hands the result to dataHandler()
-
-    //var queryUrlHead = 'http://www.google.com/fusiontables/api/query?sql=';
+function getQueryURL(table) {
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
 
     var queryUrlTail = '&key=AIzaSyAq4M53XkVSjRwNweNooYwsyaSOWKeHWws';
@@ -51,25 +61,13 @@ function getData(table, which) {
     
     //var pickedDate = '2011-11-01';
     var pickedDate = document.getElementById('datepicker').value;
-    
-    console.log(pickedDate);
-    
-    // write your SQL as normal, then encode it
+
     var query = "SELECT Radiation, Latitude, Longitude, Date FROM " + table + 
 	" WHERE Date = '"+ pickedDate + "' LIMIT 1000";
     var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
-    console.log(queryurl);
-
-    if (which == 1) { // for fixed radiation measurements from government
-	jqxhr = $.get(queryurl, dataHandler, "jsonp");
-    }
-    
-    if (which == 2) { // for measurements from citizens
-	jqxhr2 = $.get(queryurl, dataHandler2, "jsonp");	
-    }
+    return queryurl;
 }
-
 
 function dataHandler(d) {
     console.log(d);
@@ -98,7 +96,8 @@ function dataHandler(d) {
     $.ajax({
 	url:"/query",
 	type: 'POST',
-	data: {data: JSON.stringify(heatmapData)},
+	data: {data: JSON.stringify(heatmapData)}
+    }).done(function(data) {
 	success: console.log('success')
 	// success: function(msg) {
 	//     var interpolatedHeatmapData = [];
@@ -129,26 +128,20 @@ function dataHandler2(d) {
     var data = d.rows;
     infoWindow = new google.maps.InfoWindow();
     
-    // var choose = $.ajax({
-    //  	url:"/sign",
-    //  	type: 'POST',
-    //  	data: {data: JSON.stringify(data)},
-    // 	async: false
-    // }).responseText;
-
-    function boink(callback) {
-    	$.ajax({
+    function boink(data) {
+    	return $.ajax({
     	    url:"/sign",
     	    type: 'POST',
-    	    data: {data: JSON.stringify(data)},
+    	    data: data,
 	    datatype: 'json'
-	}).done(function(data) {
-	    return data;
-    	});
-    };
+	});
+    }
 
-    var choose = boink();
-    console.log(choose);
+    var choose = boink({data: JSON.stringify(data)}).done(function(data) {
+	return data;
+    });
+
+    console.log("choose: ", choose);
 
     for (var i = 0; i < data.length; i++) {
 	(function(i, data) {

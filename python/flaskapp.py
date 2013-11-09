@@ -10,8 +10,6 @@ app = Flask(__name__)
 
 @app.route('/', methods = ['GET'])
 def query():
-    global OUTPUT
-    OUTPUT = []
     return render_template('/query.html')
 
 @app.route("/query", methods = ['POST'])
@@ -29,6 +27,7 @@ def get_weightedLoc():
     smooth.set_area(200, 50)
     smooth.rbf()
 
+    global OUTPUT
     OUTPUT = smooth.convert_gmaps2json()
 
     # jsonify(out = out)
@@ -37,7 +36,7 @@ def get_weightedLoc():
 @app.route("/sign", methods = ['POST'])
 def calc_significance():
     data = json.loads(request.form.get('data'))
-    print data
+    print OUTPUT
     return jsonify(result = 1)
 
 if __name__ == '__main__':
