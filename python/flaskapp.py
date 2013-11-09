@@ -4,12 +4,14 @@ import numpy as np
 from interpolate import interpolate
 
 import sys, logging
-logging.basicConfig(stream = sys.stderr) 
+logging.basicConfig(stream = sys.stderr)
 
 app = Flask(__name__)
 
 @app.route('/', methods = ['GET'])
 def query():
+    global OUTPUT
+    OUTPUT = []
     return render_template('/query.html')
 
 @app.route("/query", methods = ['POST'])
@@ -27,8 +29,16 @@ def get_weightedLoc():
     smooth.set_area(200, 50)
     smooth.rbf()
 
-    out = smooth.convert_gmaps2json()
-    return jsonify(out = out) 
+    OUTPUT = smooth.convert_gmaps2json()
+
+    # jsonify(out = out)
+    return 'I just pass it within Flask since Im not using this data in Javascript for now'
+
+@app.route("/sign", methods = ['POST'])
+def calc_significance():
+    data = json.loads(request.form.get('data'))
+    print data
+    return jsonify(result = 1)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

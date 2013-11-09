@@ -61,7 +61,7 @@ function getData(table, which) {
 
     console.log(queryurl);
 
-    if (which == 1) { // for fixed radiatoin measurements from government
+    if (which == 1) { // for fixed radiation measurements from government
 	jqxhr = $.get(queryurl, dataHandler, "jsonp");
     }
     
@@ -95,26 +95,21 @@ function dataHandler(d) {
 
     }
 
-    var data = {data: JSON.stringify(heatmapData)}
-
-    if (false) {
-	$.ajax({
-	    url:"/query",
-	    type: 'POST',
-	    data: data,// JSON.stringify(heatmapData),
-	    success: function(msg) {
-		var interpolatedHeatmapData = [];
-		
-		for (var i = 0; i < msg['out'].length; i++) {
-		    var latlon = new google.maps.LatLng(msg['out'][i]['location']['nb'], 
-							msg['out'][i]['location']['ob']);
-		    interpolatedHeatmapData.push({location: latlon, 
-						  weight: msg['out'][i]['weight']});
-		};
-		
-	    }
-	})
-    }
+    $.ajax({
+	url:"/query",
+	type: 'POST',
+	data: {data: JSON.stringify(heatmapData)},
+	success: console.log('success')
+	// success: function(msg) {
+	//     var interpolatedHeatmapData = [];
+	    
+	//     for (var i = 0; i < msg['out'].length; i++) {
+	// 	var latlon = new google.maps.LatLng(msg['out'][i]['location']['nb'], 
+	// 					    msg['out'][i]['location']['ob']);
+	// 	interpolatedHeatmapData.push({location: latlon, 
+	// 				      weight: msg['out'][i]['weight']});
+	//     };
+    });
 
     console.log({heatmapData: heatmapData});
 
@@ -133,19 +128,47 @@ function dataHandler2(d) {
     console.log(d);
     var data = d.rows;
     infoWindow = new google.maps.InfoWindow();
+    
+    // var choose = $.ajax({
+    //  	url:"/sign",
+    //  	type: 'POST',
+    //  	data: {data: JSON.stringify(data)},
+    // 	async: false
+    // }).responseText;
+
+    function boink(callback) {
+    	//var choose = []
+    	$.ajax({
+    	    url:"/sign",
+    	    type: 'POST',
+    	    data: {data: JSON.stringify(data)},
+    	    success: callback
+    	});
+    	//return choose;
+    };
+
+    var choose = {result: 0};
 
     for (var i = 0; i < data.length; i++) {
 	(function(i, data) {
 	    setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
 		var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
 		var probability = data[i][0];
+		
+		if (choose['result'] == 0) {
+		    var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+		}
+
+		if (choose['result'] == 1) {
+		    var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+		}
 
 		var marker = new google.maps.Marker({
 		    position: latlon,
 		    rowid: i,
 		    prob: probability,
 		    animation: google.maps.Animation.DROP,
-		    icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png',
+		    icon: iconStyle,
 		    map: mymap
 		    // icon: getCircle(200)
 		});
