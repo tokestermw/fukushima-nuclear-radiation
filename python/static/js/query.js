@@ -137,17 +137,18 @@ function dataHandler2(d) {
     // }).responseText;
 
     function boink(callback) {
-    	//var choose = []
     	$.ajax({
     	    url:"/sign",
     	    type: 'POST',
     	    data: {data: JSON.stringify(data)},
-    	    success: callback
+	    datatype: 'json'
+	}).done(function(data) {
+	    return data;
     	});
-    	//return choose;
     };
 
-    var choose = {result: 0};
+    var choose = boink();
+    console.log(choose);
 
     for (var i = 0; i < data.length; i++) {
 	(function(i, data) {
