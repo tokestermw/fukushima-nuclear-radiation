@@ -127,28 +127,18 @@ function dataHandler2(d) {
 	});
     }
 
-    var significance = []
-
-    var choose = boink({data: JSON.stringify(data)}).done(function(dat) {
-	significance = dat;
-	return dat;
-    });
-
-    choose.then(mapCitiData(significance));
-
-    function mapCitiData(sign) {
-	console.log(sign);
+    var choose = boink({data: JSON.stringify(data)}).done(function(sign) {
 	for (var i = 0; i < data.length; i++) {
 	    (function(i, data) {
 		setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
 		    var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
 		    var probability = data[i][0];
-		    
-		    if (sign[i] < 0) {
-		    var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+
+		    if (sign['result'][i] < 1) {
+			var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
 		    }
 		    
-		    if (sign[i] >= 1) {
+		    if (sign['result'][i] >= 1) {
 			var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
 		    }
 
@@ -157,7 +147,7 @@ function dataHandler2(d) {
 			rowid: i,
 			prob: probability,
 			animation: google.maps.Animation.DROP,
-			icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
+			icon: iconStyle,
 			map: mymap
 			// icon: getCircle(200)
 		    });
@@ -170,8 +160,9 @@ function dataHandler2(d) {
 		
 	    }(i, data));
 	}
-    }
+    });
 }
+
 
 function getCircle(magnitude) {
     var circle = {
