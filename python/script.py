@@ -18,6 +18,8 @@ from scipy.interpolate import Rbf
 
 from itertools import izip
 
+from bisect import bisect_left
+
 dat = pd.io.parsers.read_csv("../data/station_day_avg.csv")
 dat.columns = ['station_id', 'lat', 'lon', 'date', 'radiation']
 
@@ -61,3 +63,32 @@ for i in xrange(cuts*cuts):
     jsout.append({'location':{'nb': xlong[i][0], 'ob': ylong[i][0]}, 'weight': zlong[i][0]})
 
 jsout = [{'location': {'nb':i[0][0], 'ob':i[1][0]}, 'weight':i[2][0]} for i in izip(xlong, ylong, zlong)]
+
+## now check out how I would check to see
+js = json.loads(open('dump.json').read())
+js2 = json.loads(open('dump2.json').read())
+jsS = json.loads(open('dumpS.json').read())
+
+lat_ind = []
+lon_ind = []
+for i in range(len(js2)):
+    lat_rng = GRID_RANGE['lat'][0] < js2[i][1] < GRID_RANGE['lat'][1]
+    lon_rng = GRID_RANGE['lon'][0] < js2[i][2] < GRID_RANGE['lon'][1]
+    if lat_rng and lon_rng:
+        lat_ind.append(bisect_left([k['location']['nb'] for k in jsS], js2[i][1]))
+        lon_ind.append(bisect_left([k['location']['ob'] for k in jsS], js2[i][2]))
+    else:
+        lat_ind.append(0)
+        lon_ind.append(0)
+
+js_smoothed = []
+for i in range(len(js2)):
+    if lat_ind[i] == 0 and lat_ind[i] == 0:
+        js_smoothed.append(0)
+    else:
+        js_smoothed.append(lat_ind[i])
+
+## now let's try just picking the points
+rbf = Rbf(lat, lon, val, function = "gaussian")
+z = rbf(np.array([i[1] for i in js2]), np.array([i[2] for i in js2]))
+

@@ -19,12 +19,6 @@ function demoinit() {
 
     mymap = new google.maps.Map(document.getElementById("map-canvas"), options);
 
-    // getData('10sn4pF_QpPm0JiWQKDeEkOwHxVS3Js5ohmnLgVw', 2);
-
-    // getData('1494If6PzpFbIxn5dmLtZY2KqTAPtNRJPAl3VL0w', 2);
-
-    // getData('1BRq9Wvu9yPTov_nfrf9xyUlmbPgG_8B8aA_i3uQ', 2);
-
     // var measurementLayer = new google.maps.FusionTablesLayer({
     // 	query: {
     // 	    select: 'Radiation',
@@ -33,10 +27,6 @@ function demoinit() {
     // 	map: mymap,
     // 	suppressInfoWindows: true
     // });
-
-    // getData('1jl5I-8zA1Ijt1wEUYLmB4ji3de5YzHMi_IpfgKI', 1);
-
-    // getData('15a9rZ0qPnjGW59nBWBd0KgR8hDyVct1KNX_pKwA', 2);
 
     var govURL = getQueryURL('1jl5I-8zA1Ijt1wEUYLmB4ji3de5YzHMi_IpfgKI');
     var citURL = getQueryURL('15a9rZ0qPnjGW59nBWBd0KgR8hDyVct1KNX_pKwA');
@@ -96,7 +86,7 @@ function dataHandler(d) {
     $.ajax({
 	url:"/query",
 	type: 'POST',
-	data: {data: JSON.stringify(heatmapData)}
+	data: {data: JSON.stringify(data)}
     }).done(function(data) {
 	success: console.log('success')
 	// success: function(msg) {
@@ -137,43 +127,49 @@ function dataHandler2(d) {
 	});
     }
 
-    var choose = boink({data: JSON.stringify(data)}).done(function(data) {
-	return data;
+    var significance = []
+
+    var choose = boink({data: JSON.stringify(data)}).done(function(dat) {
+	significance = dat;
+	return dat;
     });
 
-    console.log("choose: ", choose);
+    choose.then(mapCitiData(significance));
 
-    for (var i = 0; i < data.length; i++) {
-	(function(i, data) {
-	    setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
-		var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
-		var probability = data[i][0];
-		
-		if (choose['result'] == 0) {
+    function mapCitiData(sign) {
+	console.log(sign);
+	for (var i = 0; i < data.length; i++) {
+	    (function(i, data) {
+		setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
+		    var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
+		    var probability = data[i][0];
+		    
+		    if (sign[i] < 0) {
 		    var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
-		}
+		    }
+		    
+		    if (sign[i] >= 1) {
+			var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+		    }
 
-		if (choose['result'] == 1) {
-		    var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
-		}
-
-		var marker = new google.maps.Marker({
+		    var marker = new google.maps.Marker({
 		    position: latlon,
-		    rowid: i,
-		    prob: probability,
-		    animation: google.maps.Animation.DROP,
-		    icon: iconStyle,
-		    map: mymap
-		    // icon: getCircle(200)
-		});
+			rowid: i,
+			prob: probability,
+			animation: google.maps.Animation.DROP,
+			icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
+			map: mymap
+			// icon: getCircle(200)
+		    });
+		    
+		    google.maps.event.addListener(marker, 'click', function() {
+			markerClick(mymap, marker, infoWindow)
+		    });
+		    
+		}, i *  Math.min(10 * 1000 / data.length, 200));
 		
-		google.maps.event.addListener(marker, 'click', function() {
-		    markerClick(mymap, marker, infoWindow)
-		});
-
-	    }, i *  Math.min(10 * 1000 / data.length, 200));
-
-	}(i, data));
+	    }(i, data));
+	}
     }
 }
 

@@ -27,6 +27,11 @@ class interpolate:
         self.y = y
         pass
 
+    def pick_points(self, pick_x, pick_y):
+        self.x = pick_x
+        self.y = pick_y
+        pass
+
     def rbf(self, pickthefunction = "gaussian"):
         """
         Options for pickthefunction
@@ -59,5 +64,5 @@ class interpolate:
         xlong = np.reshape(self.x, (-1, 1))
         ylong = np.reshape(self.y, (-1, 1))
         zlong = np.reshape(self.z, (-1, 1))
-        
+
         return [{'location': {'nb':i[0][0], 'ob':i[1][0]}, 'weight':i[2][0]} for i in izip(xlong, ylong, zlong)]

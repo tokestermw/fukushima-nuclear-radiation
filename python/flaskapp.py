@@ -18,26 +18,51 @@ def get_weightedLoc():
     # with open('dump.json', 'w') as outfile:
     #     json.dump(data, outfile)
 
+    global DATA
+    DATA = data
+
     # set data
-    lat = np.array([i['location']['nb'] for i in data])
-    lon = np.array([i['location']['ob'] for i in data])
-    val = np.array([i['weight'] for i in data])
+    lat = np.array([i[1] for i in data])
+    lon = np.array([i[2] for i in data])
+    val = np.array([i[0] for i in data])
 
-    smooth = interpolate(lat, lon, val)
-    smooth.set_area(200, 50)
-    smooth.rbf()
+    global GRID_RANGE
+    GRID_RANGE = {'lat': [min(lat), max(lat)], 'lon': [min(lon), max(lon)]}
 
-    global OUTPUT
-    OUTPUT = smooth.convert_gmaps2json()
+    #smooth = interpolate(lat, lon, val)
+    #smooth.set_area(200, 50)
+    #smooth.rbf()
+
+    #global OUTPUT
+    #OUTPUT = smooth.convert_gmaps2json()
+    # with open('dumpS.json', 'w') as outfile:
+    #     json.dump(OUTPUT, outfile)
 
     # jsonify(out = out)
-    return 'I just pass it within Flask since Im not using this data in Javascript for now'
+    return 'Im not using this data in Javascript (client-side) for now'
 
 @app.route("/sign", methods = ['POST'])
 def calc_significance():
     data = json.loads(request.form.get('data'))
-    print OUTPUT
-    return jsonify(result = 1)
+
+    lat = np.array([i[1] for i in DATA])
+    lon = np.array([i[2] for i in DATA])
+    val = np.array([i[0] for i in DATA])
+
+    smooth = interpolate(lat, lon, val)
+
+    x = np.array([i[1] for i in data])
+    y = np.array([i[2] for i in data])
+    z = np.array([i[0] for i in data])
+    
+    smooth.pick_points(x, y)
+    smooth.rbf()
+
+    z_smooth = smooth.z
+    
+    #    with open('dump2.json', 'w') as outfile:
+    #    json.dump(data, outfile)
+    return jsonify(result = (z_smooth / z).tolist())
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
