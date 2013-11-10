@@ -116,7 +116,6 @@ function dataHandler(d) {
 function dataHandler2(d) {
     console.log(d);
     var data = d.rows;
-    infoWindow = new google.maps.InfoWindow();
     
     function boink(data) {
     	return $.ajax({
@@ -128,17 +127,18 @@ function dataHandler2(d) {
     }
 
     var choose = boink({data: JSON.stringify(data)}).done(function(sign) {
+	console.log(sign);
 	for (var i = 0; i < data.length; i++) {
 	    (function(i, data) {
 		setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
 		    var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
 		    var probability = data[i][0];
 
-		    if (sign['result'][i] < 1) {
+		    if (sign['result'][i] >= 1) {
 			var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
 		    }
 		    
-		    if (sign['result'][i] >= 1) {
+		    if (sign['result'][i] < 1) {
 			var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
 		    }
 
@@ -152,6 +152,9 @@ function dataHandler2(d) {
 			// icon: getCircle(200)
 		    });
 		    
+		    infoWindow = new google.maps.InfoWindow({
+			content: 'aho'
+		    });
 		    google.maps.event.addListener(marker, 'click', function() {
 			markerClick(mymap, marker, infoWindow)
 		    });
@@ -179,16 +182,16 @@ function getCircle(magnitude) {
 function markerClick(map, m, ifw) {
     return function() {
         // In case there's already an infoWindow open
-        ifw.close(map)
-        
+        ifw.close(map);
+        console.log(m.rowid);
         // Build html content, using data stored in the marker instance
         var infoHtml = '<strong>rowid: '+ m.rowid + ' prob: ' + m.prob
         infoHtml += '</strong><br />' + m.position.toString() + "</p>";
 
         // Standard infoWindow initialization steps
-        infoWindow.setContent(infoHtml);
-        infoWindow.setPosition(m.position);
-        infoWindow.open(map);
+        ifw.setContent(infoHtml);
+        ifw.setPosition(m.position);
+        ifw.open(map);
     };
 }
 

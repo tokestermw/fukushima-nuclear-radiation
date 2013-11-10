@@ -62,7 +62,7 @@ def calc_significance():
     
     #    with open('dump2.json', 'w') as outfile:
     #    json.dump(data, outfile)
-    return jsonify(result = (z_smooth / z).tolist())
+    return jsonify(result = (z / z_smooth).tolist())
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
