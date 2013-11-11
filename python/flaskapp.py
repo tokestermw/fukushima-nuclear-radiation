@@ -56,9 +56,15 @@ def calc_significance():
     z = np.array([i[0] for i in data])
 
     smooth.pick_points(x, y)
-    #smooth.rbf()
-    smooth.kriging()
 
+    choice = json.loads(request.form.get('choice'))
+    print choice
+
+    if choice == "Radial Basis Function":
+        smooth.rbf()
+    elif choice == "Ordinary Kriging":
+        smooth.kriging()
+        
     z_smooth = smooth.z
 
     #    with open('dump2.json', 'w') as outfile:

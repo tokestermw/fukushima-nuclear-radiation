@@ -140,7 +140,10 @@ function dataHandler2(d) {
 	});
     }
 
-    var choose = boink({data: JSON.stringify(data)}).done(function(sign) {
+    var model_choice = document.getElementById('model').value
+
+    var choose = boink({data: JSON.stringify(data), choice: JSON.stringify(model_choice)})
+	.done(function(sign) {
 	console.log(sign);
 
 	infoWindow = new google.maps.InfoWindow();
@@ -166,7 +169,6 @@ function dataHandler2(d) {
 			animation: google.maps.Animation.DROP,
 			icon: iconStyle,
 			map: mymap
-			// icon: getCircle(200)
 		    });
 		    
 		    var fn = markerClick(mymap, marker, infoWindow);
