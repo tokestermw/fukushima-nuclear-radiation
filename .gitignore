@@ -5,3 +5,4 @@ data/
 R/plots
 python/plots
 *.json
+ipynb/
