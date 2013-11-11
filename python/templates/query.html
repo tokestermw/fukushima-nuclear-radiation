@@ -19,18 +19,20 @@
     <link rel="stylesheet" href="static/css/styles.css" />
   </head>
   <body id="css-zen-garden">
-    <h1>Government Shutdown</h1>
-    <p>Date: <input type="text" id="datepicker" /> No government data from
+    <h1>Comparison of Citizen and Government Radiation Data from
+    Fukushima Daiichi</h1>
+    <p>Date (refreshes map): <input type="text" id="datepicker" value="09/24/2011" /> No government data from
     2011-03-12 to 2011-09-20. </p>
-    <!-- <p>Toggle markers: <input id="marky" type="button" value="clickme" -->
-    <!-- onclick="toggleMarkers()" /></p> -->
-    <p>Choose significance level: <input type="number" id="prop"
-    min="0" max="1" size="5" /> (between 0 and 1). </p> 
+    <p>Choose significance level (%): <input type="number" id="prop"
+    min="0" max="100" value="0" step="5" size="5" /> (between 0 and 100, defaults to 0). </p> 
     <div>
-      <img src='http://labs.google.com/ridefinder/images/mm_20_red.png'
-	   /> = Citizen Data > Government Data ||| 
+      <img src='http://labs.google.com/ridefinder/images/mm_20_green.png'
+	   /> Both data is within range (<em>e.g.</em> citizen data
+	   within +/- 20% of government data) <br />
       <img src='http://labs.google.com/ridefinder/images/mm_20_blue.png'
-	   /> = Government Data > Citizen Data
+	   /> Citizen Data > Government Data <br />     
+      <img src='http://labs.google.com/ridefinder/images/mm_20_red.png'
+	   /> Government Data > Citizen Data
     </div>
     <div id="map-canvas"></div>
   </body>

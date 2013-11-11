@@ -54,12 +54,12 @@ def calc_significance():
     x = np.array([i[1] for i in data])
     y = np.array([i[2] for i in data])
     z = np.array([i[0] for i in data])
-    
+
     smooth.pick_points(x, y)
     smooth.rbf()
 
     z_smooth = smooth.z
-    
+
     #    with open('dump2.json', 'w') as outfile:
     #    json.dump(data, outfile)
     return jsonify(result = (z / z_smooth).tolist())

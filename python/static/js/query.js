@@ -137,8 +137,12 @@ function dataHandler2(d) {
 		    var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
 		    var probability = data[i][0];
 
-		    prop = .2;
-		    
+		    var prop = document.getElementById('prop').value / 100.0;
+		    if (prop.length == 0) {
+		     	prop = 0;
+		    }
+		    console.log(prop);
+
 		    var iconStyle = chooseColor(prop, sign['result'][i]);
 
 		    var marker = new google.maps.Marker({
@@ -195,11 +199,11 @@ function chooseColor(prop, result) {
     }
     
     if (result > (1 + prop)) {
-	return 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+	return 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
     }
     
     if (result < (1 - prop)) {
-	return 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+	return 'http://labs.google.com/ridefinder/images/mm_20_red.png';
     }   
 }
 
