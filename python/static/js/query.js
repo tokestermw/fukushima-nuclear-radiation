@@ -137,13 +137,9 @@ function dataHandler2(d) {
 		    var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
 		    var probability = data[i][0];
 
-		    if (sign['result'][i] >= 1) {
-			var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
-		    }
+		    prop = .2;
 		    
-		    if (sign['result'][i] < 1) {
-			var iconStyle = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
-		    }
+		    var iconStyle = chooseColor(prop, sign['result'][i]);
 
 		    var marker = new google.maps.Marker({
 		    position: latlon,
@@ -191,6 +187,20 @@ function markerClick(map, m, ifw) {
         infoWindow.setPosition(m.position);
         infoWindow.open(map);
     };
+}
+
+function chooseColor(prop, result) {
+    if (result >= (1 - prop) && result <= (1 + prop)) {
+	return 'http://labs.google.com/ridefinder/images/mm_20_green.png';
+    }
+    
+    if (result > (1 + prop)) {
+	return 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+    }
+    
+    if (result < (1 - prop)) {
+	return 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+    }   
 }
 
 //demoinit();
