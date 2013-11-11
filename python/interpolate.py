@@ -5,6 +5,7 @@ import numpy as np
 from itertools import izip
 
 from scipy.interpolate import Rbf
+from kriging import OK
 
 FUKUSHIMA_DAIICHI = (37.422972, 141.032917)
 
@@ -54,7 +55,7 @@ class interpolate:
     def idw():
         pass
 
-    def kriging():
+    def kriging(self, pickthefunction = 'exponential'):
         pass
 
     def nn():

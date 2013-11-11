@@ -63,7 +63,8 @@ function dataHandler(d) {
     console.log(d);
     // get the actual data out of the JSON object
     var data = d.rows;
-    // console.log(data);
+
+    infoWindow = new google.maps.InfoWindow();
 
     // heatmap data
     var heatmapData = [];
@@ -80,6 +81,19 @@ function dataHandler(d) {
 	};
 
 	heatmapData.push(weightedLoc);
+
+	var marker = new google.maps.Marker({
+	    position: latlon,
+	    rowid: i,
+	    prob: probability,
+	    //animation: google.maps.Animation.BOUNCE,
+	    icon: getCircle(2),
+	    zIndex: 0, // not working
+	    map: mymap
+	});
+
+	var fn = markerClick(mymap, marker, infoWindow);
+	google.maps.event.addListener(marker, 'click', fn);
 
     }
 
@@ -169,11 +183,11 @@ function dataHandler2(d) {
 function getCircle(magnitude) {
     var circle = {
 	path: google.maps.SymbolPath.CIRCLE,
-	fillColor: 'red',
-	fillOpacity: .5,
-	scale: Math.pow(1.5, magnitude) * Math.pi * 2,
+	fillColor: 'black',
+	fillOpacity: 0,
+	scale: magnitude,// Math.pow(1.5, magnitude) * Math.pi * 2,
 	strokeColor: 'white',
-	strokeWeight: 0
+	strokeWeight: 1
     };
     return circle;
 }
@@ -183,7 +197,7 @@ function markerClick(map, m, ifw) {
         // In case there's already an infoWindow open
         ifw.close(map);
         // Build html content, using data stored in the marker instance
-        var infoHtml = '<strong>rowid: '+ m.rowid + ' prob: ' + m.prob
+        var infoHtml = '<strong>rowid: '+ m.rowid + '<br />log(Radiation): ' + m.prob
         infoHtml += '</strong><br />' + m.position.toString() + "</p>";
 
         // Standard infoWindow initialization steps

@@ -6,6 +6,8 @@ Created on Thu Jun  9 17:55:54 2011
 @website: www.ambhas.com
 @email: satkumartomer@gmail.com
 
+Adapted by Motoki Wu
+Nov 11 2013
 http://www.ambhas.com/tools/html/krige_8py_source.html
 http://blog.technokrat.nl/?p=409
 """
@@ -20,7 +22,7 @@ class OK:
     This performs the ordinary kriging
     Input:
         x: x vector of location
-        Y: y vector of location
+        y: y vector of location
         z: data vector at location (x,y)
 
     Output:
@@ -48,12 +50,16 @@ class OK:
         Y1,Y2 = np.meshgrid(y,y)
         Z1,Z2 = np.meshgrid(z,z)
 
+        # distance between all points with each other
         D = np.sqrt((X1 - X2)**2 + (Y1 - Y2)**2)
 
+        # semivariance of values
         G = 0.5*(Z1 - Z2)**2
         indx = range(len(z))
         C,R = np.meshgrid(indx,indx)
-        G = G[R>C]
+
+        # just get lower triangle
+        GI = G[R>C]
 
         self.D = D
         DI = D[R > C]
@@ -69,14 +75,14 @@ class OK:
         for i in range(n_lag):
             if i<n_lag-1:
                 DE[i] = DI[sor_i[group_n*i:group_n*(i+1)]].mean()
-                GE[i] = G[sor_i[group_n*i:group_n*(i+1)]].mean()
+                GE[i] = GI[sor_i[group_n*i:group_n*(i+1)]].mean()
 
             else:
                 DE[i] = DI[sor_i[group_n*i:]].mean()
-                GE[i] = G[sor_i[group_n*i:]].mean()
+                GE[i] = GI[sor_i[group_n*i:]].mean()
 
         if var_type == 'scattered':
-            return DI,G
+            return DI,GI
         elif var_type == 'averaged':
             return DE,GE
         else:
@@ -168,13 +174,15 @@ class OK:
         # set up the Gmod matrix
         n = len(self.x)
         Gmod = np.empty((n+1,n+1))
+
+        # spatial autocorrelation between the data points
         Gmod[:n, :n] = self.vario_model(self.D, model_par, model_type)
 
         Gmod[:,n] = 1
         Gmod[n,:] = 1
-        Gmod[n,n] = 0
+        Gmod[n,n] = Gmod
 
-        Gmod = np.matrix(Gmod)
+        0 = np.matrix(Gmod)
 
         # inverse of Gmod
         Ginv = Gmod.I
@@ -184,11 +192,13 @@ class OK:
         Zg = np.empty(Xg.shape)
         s2_k = np.empty(Xg.shape)
 
-        for k in range(len(Xg)):
+        for k in range(len(Xg)): # for each point that you'd like to krige
 
+            # for each krigged point, distance from all the data points
             DOR = ((self.x - Xg[k])**2 + (self.y - Yg[k])**2)**0.5
             GR = np.empty((n+1,1))
 
+            # calculate spatial autocorrelation
             GR[:n,0] = self.vario_model(DOR, model_par, model_type)
 
             GR[n,0] = 1

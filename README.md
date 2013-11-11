@@ -1,4 +1,4 @@
-Comparison of Government and Crowd Sourced Radiation Data from the Fukushima Daiichi Nuclear Meltdown
+Comparison of Citizen and Government Radiation Data from Fukushima Daiichi
 ===========================
 
 ## The Problem

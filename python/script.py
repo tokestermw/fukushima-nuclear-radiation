@@ -90,5 +90,40 @@ for i in range(len(js2)):
 
 ## now let's try just picking the points
 rbf = Rbf(lat, lon, val, function = "gaussian")
-z = rbf(np.array([i[1] for i in js2]), np.array([i[2] for i in js2]))
+z_points = rbf(np.array([i[1] for i in js2]), np.array([i[2] for i in js2]))
 
+## play around with kriging
+import kriging
+
+ok = kriging.OK(lat, lon, val)
+
+ax, ay = ok.variogram(n_lag = 7)
+
+
+plt.plot(ax,ay,'ro')
+plt.savefig('plots/axay.pdf')
+plt.close()
+
+lags = np.linspace(0,.25)
+model_par = {}
+model_par['nugget'] = 0
+model_par['range'] = .06
+model_par['sill'] = 1.6
+
+G = ok.vario_model(lags, model_par, model_type = 'exponential')
+plt.plot(lags, G, 'k')
+plt.savefig('plots/vario_model.pdf')
+plt.close()
+
+Rx = np.linspace(min(lat), max(lat), 100)
+Ry = np.linspace(min(lon), max(lon), 20)
+XI,YI = np.meshgrid(Rx,Ry)
+
+ok.krige(XI, YI, model_par, 'exponential')
+
+plt.matshow(ok.Zg.reshape(20, 100))
+plt.savefig('plots/krigged.pdf')
+plt.close()
+
+
+# get data into the kriging
