@@ -170,6 +170,11 @@ class OK:
             self.s2_k = variance in the data
 
         """
+        X1,X2 = np.meshgrid(self.x,self.x)
+        Y1,Y2 = np.meshgrid(self.y,self.y)
+
+        D = np.sqrt((X1 - X2)**2 + (Y1 - Y2)**2)
+        self.D = np.sqrt((X1 - X2)**2 + (Y1 - Y2)**2)
 
         # set up the Gmod matrix
         n = len(self.x)
@@ -180,9 +185,9 @@ class OK:
 
         Gmod[:,n] = 1
         Gmod[n,:] = 1
-        Gmod[n,n] = Gmod
+        Gmod[n,n] = 0
 
-        0 = np.matrix(Gmod)
+        Gmod = np.matrix(Gmod)
 
         # inverse of Gmod
         Ginv = Gmod.I
@@ -221,7 +226,7 @@ class OK:
             self.Zg : krigged data
             self.s2_k = variance in the data
 
-        """
+s        """
 
         # set up the Gmod matrix
         n = len(self.x)

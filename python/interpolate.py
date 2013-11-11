@@ -56,6 +56,24 @@ class interpolate:
         pass
 
     def kriging(self, pickthefunction = 'exponential'):
+        """
+        n ~ nugget, s ~ slope or sill, l ~ lags, r ~ range
+        if model_type == 'spherical':
+            G = n + (s*(1.5*l/r - 0.5*(l/r)**3)*(l<=r) + s*(l>r))
+        elif model_type == 'linear':
+            G = n + s*l
+        elif model_type == 'exponential':
+            G = n + s*(1 - np.exp(-3*l/r))
+        """
+        ok = OK(self.lat, self.lon, self.val)
+
+        model_par = {} # parameters of the model (trained beforehand)
+        model_par['nugget'] = 0
+        model_par['range'] = 1
+        model_par['sill'] = 2.0
+
+        ok.krige(self.x, self.y, model_par, pickthefunction)
+        self.z = ok.Zg
         pass
 
     def nn():

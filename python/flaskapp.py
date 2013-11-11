@@ -22,12 +22,12 @@ def get_weightedLoc():
     DATA = data
 
     # set data
-    lat = np.array([i[1] for i in data])
-    lon = np.array([i[2] for i in data])
-    val = np.array([i[0] for i in data])
+    # lat = np.array([i[1] for i in data])
+    # lon = np.array([i[2] for i in data])
+    # val = np.array([i[0] for i in data])
 
-    global GRID_RANGE
-    GRID_RANGE = {'lat': [min(lat), max(lat)], 'lon': [min(lon), max(lon)]}
+    # global GRID_RANGE
+    # GRID_RANGE = {'lat': [min(lat), max(lat)], 'lon': [min(lon), max(lon)]}
 
     #smooth = interpolate(lat, lon, val)
     #smooth.set_area(200, 50)
@@ -56,7 +56,8 @@ def calc_significance():
     z = np.array([i[0] for i in data])
 
     smooth.pick_points(x, y)
-    smooth.rbf()
+    #smooth.rbf()
+    smooth.kriging()
 
     z_smooth = smooth.z
 
