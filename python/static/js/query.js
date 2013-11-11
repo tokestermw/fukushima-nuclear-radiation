@@ -1,5 +1,5 @@
-// Adapted after Robin http
-// Kraft://www.reddmetrics.com/2011/08/10/fusion-tables-javascript-query-maps.html
+// Adapted after Robin Kraft
+// http:://www.reddmetrics.com/2011/08/10/fusion-tables-javascript-query-maps.html
 // http://jsfiddle.net/odi86/Sbt2P/
 
 function demoinit() {
@@ -128,6 +128,9 @@ function dataHandler2(d) {
 
     var choose = boink({data: JSON.stringify(data)}).done(function(sign) {
 	console.log(sign);
+
+	infoWindow = new google.maps.InfoWindow();
+
 	for (var i = 0; i < data.length; i++) {
 	    (function(i, data) {
 		setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
@@ -152,13 +155,9 @@ function dataHandler2(d) {
 			// icon: getCircle(200)
 		    });
 		    
-		    infoWindow = new google.maps.InfoWindow({
-			content: 'aho'
-		    });
-		    google.maps.event.addListener(marker, 'click', function() {
-			markerClick(mymap, marker, infoWindow)
-		    });
-		    
+		    var fn = markerClick(mymap, marker, infoWindow);
+		    google.maps.event.addListener(marker, 'click', fn);
+
 		}, i *  Math.min(10 * 1000 / data.length, 200));
 		
 	    }(i, data));
@@ -183,15 +182,14 @@ function markerClick(map, m, ifw) {
     return function() {
         // In case there's already an infoWindow open
         ifw.close(map);
-        console.log(m.rowid);
         // Build html content, using data stored in the marker instance
         var infoHtml = '<strong>rowid: '+ m.rowid + ' prob: ' + m.prob
         infoHtml += '</strong><br />' + m.position.toString() + "</p>";
 
         // Standard infoWindow initialization steps
-        ifw.setContent(infoHtml);
-        ifw.setPosition(m.position);
-        ifw.open(map);
+        infoWindow.setContent(infoHtml);
+        infoWindow.setPosition(m.position);
+        infoWindow.open(map);
     };
 }
 

@@ -5,14 +5,8 @@
     <meta charset="utf-8">
     <title>Fukushima Nuclear Radiation Measurements by MEXT</title>
     <style>
-      html, body, #map-canvas {
-        height: 100%;
-        margin: 5px;
-        padding: 5px
-      }
     </style>  
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-
     <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,visualization&v=3.exp&sensor=false"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -22,16 +16,19 @@
     </script>
     <script src="static/js/slider.js"></script>
     <script src="static/js/query.js"></script>
+    <link rel="stylesheet" href="static/css/styles.css" />
   </head>
-  <body>
+  <body id="css-zen-garden">
+    <h1>Government Shutdown</h1>
     <p>Date: <input type="text" id="datepicker" /> No government data from
     2011-03-12 to 2011-09-20. </p>
     <!-- <p>Toggle markers: <input id="marky" type="button" value="clickme" -->
     <!-- onclick="toggleMarkers()" /></p> -->
-    <div id="datepicker"></div>
+    <p>Choose significance level: <input type="number" id="sign"
+    min="0" max="1" size="5" /> (between 0 and 1). </p> 
     <div>
       <img src='http://labs.google.com/ridefinder/images/mm_20_red.png'
-	   /> = Citizen Data > Government Data  <br />
+	   /> = Citizen Data > Government Data ||| 
       <img src='http://labs.google.com/ridefinder/images/mm_20_blue.png'
 	   /> = Government Data > Citizen Data
     </div>
