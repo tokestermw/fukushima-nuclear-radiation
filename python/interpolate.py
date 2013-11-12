@@ -6,6 +6,7 @@ from itertools import izip
 
 from scipy.interpolate import Rbf
 from kriging import OK
+from idw import IDW
 
 FUKUSHIMA_DAIICHI = (37.422972, 141.032917)
 
@@ -17,7 +18,7 @@ class interpolate:
         self.val = val
         pass
 
-    def set_area(self, cuts_lat, cuts_lon):
+    def set_grid(self, cuts_lat, cuts_lon):
         """
         Set the bounding box / circle for the interpolation.
         """
@@ -52,7 +53,13 @@ class interpolate:
         self.z = rbf(self.x, self.y)
         pass
 
-    def idw():
+    def simple_idw(self):
+        """
+        Simple inverse distance weighting.
+        """
+        idw = IDW(self.lat, self.lon, self.val)
+        idw.inverse_distance_weighting(self.x, self.y)
+        self.z = idw.z
         pass
 
     def kriging(self, pickthefunction = 'exponential'):

@@ -30,7 +30,7 @@ def get_weightedLoc():
     # GRID_RANGE = {'lat': [min(lat), max(lat)], 'lon': [min(lon), max(lon)]}
 
     #smooth = interpolate(lat, lon, val)
-    #smooth.set_area(200, 50)
+    #smooth.set_grid(200, 50)
     #smooth.rbf()
 
     #global OUTPUT
@@ -58,13 +58,14 @@ def calc_significance():
     smooth.pick_points(x, y)
 
     choice = json.loads(request.form.get('choice'))
-    print choice
 
     if choice == "Radial Basis Function":
         smooth.rbf()
+    elif choice == "Inverse Distance Weighting":
+        smooth.simple_idw()
     elif choice == "Ordinary Kriging":
         smooth.kriging()
-        
+
     z_smooth = smooth.z
 
     #    with open('dump2.json', 'w') as outfile:

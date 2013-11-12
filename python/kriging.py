@@ -173,7 +173,6 @@ class OK:
         X1,X2 = np.meshgrid(self.x,self.x)
         Y1,Y2 = np.meshgrid(self.y,self.y)
 
-        D = np.sqrt((X1 - X2)**2 + (Y1 - Y2)**2)
         self.D = np.sqrt((X1 - X2)**2 + (Y1 - Y2)**2)
 
         # set up the Gmod matrix
