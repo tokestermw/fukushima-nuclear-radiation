@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, json, jsonify
 
 import numpy as np
-from interpolate import interpolate
+from interpolate import interpolate, cv
 
 import sys, logging
 logging.basicConfig(stream = sys.stderr)
@@ -59,18 +59,22 @@ def calc_significance():
 
     choice = json.loads(request.form.get('choice'))
 
-    if choice == "Radial Basis Function":
-        smooth.rbf()
-    elif choice == "Inverse Distance Weighting":
+    if choice == "Inverse Distance Weighting":
         smooth.simple_idw()
+    elif choice == "Radial Basis Function":
+        smooth.rbf()
     elif choice == "Ordinary Kriging":
         smooth.kriging()
 
     z_smooth = smooth.z
 
+    ## run cross validation
+    cv_results = cv(choice, lat, lon, val)
+
     #    with open('dump2.json', 'w') as outfile:
     #    json.dump(data, outfile)
-    return jsonify(result = (z / z_smooth).tolist())
+    return jsonify(result = (z / z_smooth).tolist(),
+                   cv_results = cv_results)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

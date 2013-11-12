@@ -125,5 +125,24 @@ plt.matshow(ok.Zg.reshape(20, 100))
 plt.savefig('plots/krigged.pdf')
 plt.close()
 
+## now test cross validation
+# I should have the original data: lat, lon val
+# then, each point should be a point to interpolate,,
+# calculate MSE
+def cv(choice, lat, lon, val):
+    results = np.array([])
+    model_par = {} # parameters of the model (trained beforehand)
+    model_par['nugget'] = 0
+    model_par['range'] = 1
+    model_par['sill'] = 2.0
+    for k in range(len(lat)): # leave one out cross validation
+        mask = [i for i in range(len(lat)) if i != k]
+        ok = kriging.OK(lat[mask], lon[mask], val[mask])
+        ok.krige(lat[k], lon[k], model_par, 'exponential')
+        z_smoothed = ok.Zg
+        results = np.append(results, (z_smoothed - val[k])**2)
+    else:
+        pass
+    return results
 
-# get data into the kriging
+results.mean() # MSE

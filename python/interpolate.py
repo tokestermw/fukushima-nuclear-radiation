@@ -92,3 +92,24 @@ class interpolate:
         zlong = np.reshape(self.z, (-1, 1))
 
         return [{'location': {'nb':i[0][0], 'ob':i[1][0]}, 'weight':i[2][0]} for i in izip(xlong, ylong, zlong)]
+
+
+def cv(choice, lat, lon, val):
+    """
+    Leave one out cross validation, returns MSE. 
+    """
+    results = np.array([])
+    for k in range(len(lat)):
+        mask = [i for i in range(len(lat)) if i != k]
+        model = interpolate(lat[mask], lon[mask], val[mask])
+        model.pick_points(lat[k], lon[k])
+        if choice == "Inverse Distance Weighting":
+            model.simple_idw()
+        elif choice == "Radial Basis Function":
+            model.rbf()
+        elif choice == "Ordinary Kriging":
+            model.kriging()
+        else:
+            pass
+        results = np.append(results, model.z)
+    return results.mean()
