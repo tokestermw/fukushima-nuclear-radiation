@@ -1,4 +1,5 @@
 -- create and import station-data and station_id
+-- station_join.db
 
 create table station_id (station_id integer, site_id text, site_name text, prefecture_name text, lat float, lon float);
 .separator ","
@@ -9,7 +10,7 @@ create unique index idx_id on station_id (station_id);
 create table station_data (station_id integer, datetime text, val float,
 foreign key (station_id) references station_id (station_id) );
 .separator ","
-.import 'station_data_2011.csv' station_data
+.import 'station_data_cut.csv' station_data
 
 create index idx_data on station_data (station_id);
 

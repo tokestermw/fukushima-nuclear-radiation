@@ -21,7 +21,7 @@ $(function() {
     $( "#datepicker" ).datepicker({ 
 	defaultDate: new Date(2011, 9-1, 24),
 	minDate: new Date(2011, 2-1, 28), 
-	maxDate: new Date(2011, 11-1, 18),
+	maxDate: new Date(2013, 10-1, 21),
 	onSelect: function(dateText) {
 	    demoinit();
 	}

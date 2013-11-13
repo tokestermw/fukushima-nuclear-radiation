@@ -47,13 +47,13 @@ def calc_significance():
 
     lat = np.array([i[1] for i in DATA])
     lon = np.array([i[2] for i in DATA])
-    val = np.array([i[0] for i in DATA])
+    val = np.log(np.array([i[0] for i in DATA]))
 
     smooth = interpolate(lat, lon, val)
 
     x = np.array([i[1] for i in data])
     y = np.array([i[2] for i in data])
-    z = np.array([i[0] for i in data])
+    z = np.log(np.array([i[0] for i in data]))
 
     smooth.pick_points(x, y)
 

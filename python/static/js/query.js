@@ -28,8 +28,11 @@ function demoinit() {
     // 	suppressInfoWindows: true
     // });
 
-    var govURL = getQueryURL('1jl5I-8zA1Ijt1wEUYLmB4ji3de5YzHMi_IpfgKI');
-    var citURL = getQueryURL('15a9rZ0qPnjGW59nBWBd0KgR8hDyVct1KNX_pKwA');
+//    var govURL = getQueryURL('1jl5I-8zA1Ijt1wEUYLmB4ji3de5YzHMi_IpfgKI');
+    var govURL = getQueryURL('1VN5CvclBOR7aV0pimYei_dtozRjOKBDHjAH-rJY');
+//    var citURL = getQueryURL('15a9rZ0qPnjGW59nBWBd0KgR8hDyVct1KNX_pKwA');
+//    var citURL = getQueryURL('1vbwmVpcAv_QFlYeOk_ZAio8vuGUzEY1hRCLznfc');
+    var citURL = getQueryURL('18g3f37bZshqX7XzbpsNHK7oIr0JmWCcMoxxE4fA');
 
     function runGov() {
 	console.log(govURL);
@@ -73,7 +76,7 @@ function dataHandler(d) {
     for (var i = 0; i < data.length; i++) {
 
         var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
-        var probability = data[i][0];
+        var probability = Math.log(data[i][0]);
 
 	var weightedLoc = {
 	    location: latlon,
@@ -155,7 +158,7 @@ function dataHandler2(d) {
 		(function(i, data) {
 		    setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
 			var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
-			var probability = data[i][0];
+			var probability = Math.log(data[i][0]);
 			
 			var prop = document.getElementById('prop').value / 100.0;
 			if (prop.length == 0) {

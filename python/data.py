@@ -44,11 +44,12 @@ def scan(startpoint, endpoint, km):
 def append_scan_to_data(fname, column, km):
     """
     Subsets data wrt space and outputs to *_subset.csv.
-    lat, lon data need to be in consecutive columns in that order. 
+    lat, lon data need to be in consecutive columns in that order.
     """
     lat, lon = [column, column + 2]
     with open(fname) as f:
         c = open(fname[:-4] + '_subset.csv', 'w')
+        next(f) # skip first header line
         for line in f:
             splt = line.split(',')
             endpoint = tuple([float(i) for i in splt[lat:lon]])
