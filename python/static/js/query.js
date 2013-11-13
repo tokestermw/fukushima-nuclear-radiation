@@ -9,7 +9,7 @@ function demoinit() {
 
     var options = {
         disableDefaultUI: true,
-        zoom: 10,
+        zoom: 11,
         center: latlon,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         mapTypeControl: true,
@@ -120,7 +120,7 @@ function dataHandler(d) {
     	data: heatmapData,
     	dissipating: true,
     	opacity: .5,
-    	radius: 22,
+    	radius: 30,
     	maxIntensity: 25,
     	map: mymap
     });
