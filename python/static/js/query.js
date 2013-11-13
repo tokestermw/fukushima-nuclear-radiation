@@ -144,41 +144,44 @@ function dataHandler2(d) {
 
     var choose = boink({data: JSON.stringify(data), choice: JSON.stringify(model_choice)})
 	.done(function(sign) {
-	console.log(sign);
-
-	infoWindow = new google.maps.InfoWindow();
-
-	for (var i = 0; i < data.length; i++) {
-	    (function(i, data) {
-		setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
-		    var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
-		    var probability = data[i][0];
-
-		    var prop = document.getElementById('prop').value / 100.0;
-		    if (prop.length == 0) {
-		     	prop = 0;
-		    }
-		    console.log(prop);
-
-		    var iconStyle = chooseColor(prop, sign['result'][i]);
-
-		    var marker = new google.maps.Marker({
-		    position: latlon,
-			rowid: i,
-			prob: probability,
-			animation: google.maps.Animation.DROP,
-			icon: iconStyle,
-			map: mymap
-		    });
+	    console.log('(Citizen Data) / (Smoothed Government Data): ', sign['result']);
+	    console.log('Leave one out cross validation MSE: ', sign['cv_results']);
+	    
+	    var cv = document.getElementById('cv').innerHTML=sign['cv_results'];
+	    
+	    infoWindow = new google.maps.InfoWindow();
+	    
+	    for (var i = 0; i < data.length; i++) {
+		(function(i, data) {
+		    setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
+			var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
+			var probability = data[i][0];
+			
+			var prop = document.getElementById('prop').value / 100.0;
+			if (prop.length == 0) {
+		     	    prop = 0;
+			}
+			console.log(prop);
+			
+			var iconStyle = chooseColor(prop, sign['result'][i]);
+			
+			var marker = new google.maps.Marker({
+			    position: latlon,
+			    rowid: i,
+			    prob: probability,
+			    animation: google.maps.Animation.DROP,
+			    icon: iconStyle,
+			    map: mymap
+			});
+			
+			var fn = markerClick(mymap, marker, infoWindow);
+			google.maps.event.addListener(marker, 'click', fn);
+			
+		    }, i *  Math.min(10 * 1000 / data.length, 200));
 		    
-		    var fn = markerClick(mymap, marker, infoWindow);
-		    google.maps.event.addListener(marker, 'click', fn);
-
-		}, i *  Math.min(10 * 1000 / data.length, 200));
-		
-	    }(i, data));
-	}
-    });
+		}(i, data));
+	    }
+	});
 }
 
 
