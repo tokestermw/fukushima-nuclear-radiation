@@ -21,16 +21,23 @@ body {
     font: 100% 'Libre Baskerville', "Helvetica Neue", georgia, sans-serif;
     line-height: 1.88889;
     color: #555753; 
-    background: #fff url(blossoms.jpg) no-repeat bottom right; 
+    background: #fff no-repeat bottom right; 
     margin: 5px; 
     padding: 5px;
 }
 
 #map-canvas {
-    height: 100%;
+    height: 90%;
     margin: 20px;
     padding: 20px
 }
+
+/* #brisChart { */
+/*     height: 40%; */
+/*     width: 50%; */
+/*     margin: 20px; */
+/*     padding: 20px; */
+/* } */
 
 p { 
 	margin-top: 0; 

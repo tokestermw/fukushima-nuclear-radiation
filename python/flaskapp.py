@@ -6,6 +6,8 @@ from interpolate import interpolate, cv
 import sys, logging
 logging.basicConfig(stream = sys.stderr)
 
+import matplotlib.pyplot as plt
+
 app = Flask(__name__)
 
 @app.route('/', methods = ['GET'])
@@ -59,12 +61,14 @@ def calc_significance():
 
     choice = json.loads(request.form.get('choice'))
 
+    s2_k = np.zeros(len(x))
     if choice == "Inverse Distance Weighting":
         smooth.simple_idw()
     elif choice == "Radial Basis Function":
         smooth.rbf()
     elif choice == "Ordinary Kriging":
         smooth.kriging()
+        s2_k = np.sqrt(smooth.s2_k) * 1.96 # 95% CI
 
     z_smooth = smooth.z
 
@@ -74,7 +78,10 @@ def calc_significance():
     #    with open('dump2.json', 'w') as outfile:
     #    json.dump(data, outfile)
     return jsonify(result = (z / z_smooth).tolist(),
-                   cv_results = cv_results)
+                   cv_results = cv_results,
+                   z = z.tolist(),
+                   z_smooth = z_smooth.tolist(),
+                   s2_k = s2_k.tolist())
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

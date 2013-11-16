@@ -104,6 +104,7 @@ plt.plot(ax,ay,'ro')
 plt.savefig('plots/axay.pdf')
 plt.close()
 
+
 lags = np.linspace(0,.25)
 model_par = {}
 model_par['nugget'] = 0

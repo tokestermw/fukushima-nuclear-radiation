@@ -81,6 +81,7 @@ class interpolate:
 
         ok.krige(self.x, self.y, model_par, pickthefunction)
         self.z = ok.Zg
+        self.s2_k = ok.s2_k
         pass
 
     def nn():
@@ -96,7 +97,7 @@ class interpolate:
 
 def cv(choice, lat, lon, val):
     """
-    Leave one out cross validation, returns MSE. 
+    Leave one out cross validation, returns MSE.
     """
     results = np.array([])
     for k in range(len(lat)):

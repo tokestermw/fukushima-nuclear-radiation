@@ -10,6 +10,11 @@
     <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,visualization&v=3.exp&sensor=false"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <!-- <script type="text/javascript" -->
+    <!-- src="http://www.google.com/jsapi"></script> -->
+    <script type="text/javascript" src="static/js/jquery.gchart.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.gchart.ext.min.js"></script>
+
     <script type=text/javascript>
       var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
       console.log($SCRIPT_ROOT);
@@ -23,7 +28,7 @@
     Fukushima Daiichi</h1>
     <p>Date (refreshes map): <input type="text" id="datepicker" value="09/24/2011" /> No government data from
     2011-03-12 to 2011-09-20. </p>
-    <p>Choose significance level (%): <input type="number" id="prop"
+    <p>Choose percentage difference (%): <input type="number" id="prop"
     min="0" max="100" value="0" step="5" size="5" /> (between 0 and
     100, defaults to 0). </p> 
     <p>Choose interpolation model: 
@@ -45,6 +50,7 @@
 	   /> Government Data > Citizen Data
     </div>
     <div id="map-canvas"></div>
+    <!-- <div id="brisChart"></div> -->
     <p>Source
     code <a href="https://github.com/tokestermw/fukushima-nuclear-radiation">here.</a></p>
     <p>Database provided by Google Fusion Tables. Link to

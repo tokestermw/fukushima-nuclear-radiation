@@ -1,34 +1,15 @@
 Comparison of Citizen and Government Radiation Data from Fukushima Daiichi
 ===========================
 
-## The Problem
-
-The large earthquake off the coast of Fukushima, Japan caused the
-second largest nuclear disaster since Cherynobyl. A large area around
-the epicenter were evacuated to reduce the risk of exposure to nuclear
-radiation. Years after the accident, there is still residual fear of
-both direct exposure and contamination (especially with foodstuffs and
-leaking radioactive water into the Pacific Ocean). The fallout from
-this fear caused a cascading effect on food safety, energy policy,
-tourism and perception towards government. The actual health effects
-from radiation is unclear since the effects of radiation is
-cumulative. The great skepticism towards both the electric company
-(TEPCO) and the government paralyzes progressive steps to determine
-the course of action with future nuclear policy.
-
-One area data can assuage these fears is a direct comparison of
-government and crowd sourced citizen radiation data. Government
-collects radiation data across Japan and they broadcast them on the
-website. Radiation readings have especially increased around Fukushima
-after the earthquake, so interested people can work with the data. But
-given the public skepticism towards government, it is not sufficient
-to dispel safety concerns. Safecast is a sensor network completely
-independent both politically and instrument-wise to provide a valuable
-check against government data.
+## Context
 
 The goal of this project visualize the difference between government
-and crowd sourced data. Increased transparency by the visualization
-enables the public to get beyond the cynicism to solve real problems.
+and crowd sourced data. Instead of running an overly complicated
+algorithm through the data, I use relatively simple, well-tested
+models to compare both datasets. I let the user pick the what is
+"significant" in order to get a good feel of the difference for high
+temporal and spatial resolution. A traditional hypothesis test would be
+limited due to subjectivity in which points to test. 
 
 ## Data
 
@@ -38,7 +19,7 @@ enables the public to get beyond the cynicism to solve real problems.
 
 [Japan Radiation Open Data](http://www.sendung.de/japan-radiation-open-data/)
 
-[MEXT](http://notice.yahoo.co.jp/emg/en/archives/np_jp.html)
+[MEXT](http://www.bousai.ne.jp/eng/index.html)
 
 [Disaster Prevention and Nuclear Safety Network for Nuclear Environment](http://www.bousai.ne.jp/eng/index.html)
 

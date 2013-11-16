@@ -35,7 +35,7 @@ function demoinit() {
     var citURL = getQueryURL('18g3f37bZshqX7XzbpsNHK7oIr0JmWCcMoxxE4fA');
 
     function runGov() {
-	console.log(govURL);
+	console.log('Government query URL: ', govURL);
 	return $.get(govURL, dataHandler, "jsonp");
     }
 
@@ -63,7 +63,7 @@ function getQueryURL(table) {
 }
 
 function dataHandler(d) {
-    console.log(d);
+    console.log("Data for the heatmap: ", d);
     // get the actual data out of the JSON object
     var data = d.rows;
 
@@ -105,7 +105,7 @@ function dataHandler(d) {
 	type: 'POST',
 	data: {data: JSON.stringify(data)}
     }).done(function(data) {
-	success: console.log('success')
+	success: console.log('Success AJAX call to Flask app')
 	// success: function(msg) {
 	//     var interpolatedHeatmapData = [];
 	    
@@ -117,7 +117,7 @@ function dataHandler(d) {
 	//     };
     });
 
-    console.log({heatmapData: heatmapData});
+    console.log('HeatmapData: ', {heatmapData: heatmapData});
 
     var heatmap = new google.maps.visualization.HeatmapLayer({
     	data: heatmapData,
@@ -131,7 +131,7 @@ function dataHandler(d) {
 }
 
 function dataHandler2(d) {
-    console.log(d);
+    console.log("Data for Crowdsourced: ", d);
     var data = d.rows;
     
     function boink(data) {
@@ -147,13 +147,18 @@ function dataHandler2(d) {
 
     var choose = boink({data: JSON.stringify(data), choice: JSON.stringify(model_choice)})
 	.done(function(sign) {
+	    
 	    console.log('(Citizen Data) / (Smoothed Government Data): ', sign['result']);
 	    console.log('Leave one out cross validation MSE: ', sign['cv_results']);
 	    
-	    var cv = document.getElementById('cv').innerHTML=sign['cv_results'];
+	    var cv = document.getElementById('cv').innerHTML = sign['cv_results'];
 	    
 	    infoWindow = new google.maps.InfoWindow();
 	    
+	    console.log('z', sign['z']);
+	    console.log('z_smooth', sign['z_smooth']);
+	    console.log('s2_k', sign['s2_k']);
+
 	    for (var i = 0; i < data.length; i++) {
 		(function(i, data) {
 		    setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
@@ -164,7 +169,6 @@ function dataHandler2(d) {
 			if (prop.length == 0) {
 		     	    prop = 0;
 			}
-			console.log(prop);
 			
 			var iconStyle = chooseColor(prop, sign['result'][i]);
 			
@@ -172,10 +176,22 @@ function dataHandler2(d) {
 			    position: latlon,
 			    rowid: i,
 			    prob: probability,
-			    animation: google.maps.Animation.DROP,
+			    //animation: google.maps.Animation.DROP,
 			    icon: iconStyle,
 			    map: mymap
 			});
+
+			if (sign['z'][i] <= (sign['z_smooth'][i] + sign['s2_k'][i]) && 
+			    sign['z'][i] >= (sign['z_smooth'][i] - sign['s2_k'][i])) {
+
+			    var marker2 = new google.maps.Marker({
+				position: latlon,
+				rowid: i,
+				prob: probability,
+				icon: getCircle(8),
+				map: mymap
+			    });
+			}
 			
 			var fn = markerClick(mymap, marker, infoWindow);
 			google.maps.event.addListener(marker, 'click', fn);
@@ -184,9 +200,24 @@ function dataHandler2(d) {
 		    
 		}(i, data));
 	    }
-	});
-}
 
+	    var both_data = data.map(function(v, i) { return [v[1], sign['result'][i]]; }).
+		sort(function(a, b) { return a[0] - b[0] });
+	    console.log(both_data);
+
+	    $(function () {
+	     	$('#brisChart').gchart({
+	     	    type: 'lineXY', minValue: 0, maxValue: 40,
+	     	    title: 'blablabla', titleColor: 'black', 
+	     	    backgroundColor: $.gchart.gradient('horizontal', 'ffffff', 'ffffff'), 
+	     	    series: $.gchart.seriesForXYLines([$.gchart.series('Result', both_data.slice(1,40))]),
+	     	    legend: 'right'
+	     	});
+	    });
+	    
+	});
+
+}
 
 function getCircle(magnitude) {
     var circle = {
