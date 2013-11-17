@@ -55,7 +55,8 @@ def calc_significance():
 
     x = np.array([i[1] for i in data])
     y = np.array([i[2] for i in data])
-    z = np.log(np.array([i[0] for i in data]))
+    # cpm to microsievert to nanogray per hour
+    z = np.log(np.array([i[0] for i in data]) / 350.0 * 1000.0)
 
     smooth.pick_points(x, y)
 

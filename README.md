@@ -23,6 +23,8 @@ limited due to subjectivity in which points to test.
 
 [Disaster Prevention and Nuclear Safety Network for Nuclear Environment](http://www.bousai.ne.jp/eng/index.html)
 
+[原子力規制委員会 (Nuclear Regulation Authority)](http://radioactivity.nsr.go.jp/ja/)
+
 #### Maps
 
 [GEBWEB](http://gebweb.net/blogpost/2011/03/17/japan-radiation-map/)

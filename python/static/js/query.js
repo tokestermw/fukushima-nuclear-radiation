@@ -163,7 +163,8 @@ function dataHandler2(d) {
 		(function(i, data) {
 		    setTimeout(function() { // http://jsfiddle.net/yV6xv/128/
 			var latlon = new google.maps.LatLng(data[i][1], data[i][2]);
-			var probability = Math.log(data[i][0]);
+			var probability = sign['z'][i];
+			    // Math.log(data[i][0] / 350.0 * 1000.0);
 			
 			var prop = document.getElementById('prop').value / 100.0;
 			if (prop.length == 0) {
@@ -176,7 +177,7 @@ function dataHandler2(d) {
 			    position: latlon,
 			    rowid: i,
 			    prob: probability,
-			    //animation: google.maps.Animation.DROP,
+			    animation: google.maps.Animation.DROP,
 			    icon: iconStyle,
 			    map: mymap
 			});
