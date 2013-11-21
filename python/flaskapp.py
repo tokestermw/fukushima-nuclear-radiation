@@ -56,7 +56,7 @@ def calc_significance():
     x = np.array([i[1] for i in data])
     y = np.array([i[2] for i in data])
     # cpm to microsievert to nanogray per hour
-    z = np.log(np.array([i[0] for i in data]) / 350.0 * 1000.0)
+    z = np.log(np.array([i[0] for i in data]))
 
     smooth.pick_points(x, y)
 
@@ -65,7 +65,7 @@ def calc_significance():
     s2_k = np.zeros(len(x))
     if choice == "Inverse Distance Weighting":
         smooth.simple_idw()
-    elif choice == "Radial Basis Function":
+    elif choice == "Radial Basis Network":
         smooth.rbf()
     elif choice == "Ordinary Kriging":
         smooth.kriging()

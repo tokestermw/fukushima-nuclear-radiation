@@ -106,11 +106,12 @@ def cv(choice, lat, lon, val):
         model.pick_points(lat[k], lon[k])
         if choice == "Inverse Distance Weighting":
             model.simple_idw()
-        elif choice == "Radial Basis Function":
+        elif choice == "Radial Basis Network":
             model.rbf()
         elif choice == "Ordinary Kriging":
             model.kriging()
         else:
             pass
         results = np.append(results, model.z)
+
     return results.mean()

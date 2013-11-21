@@ -133,7 +133,14 @@ function dataHandler(d) {
 function dataHandler2(d) {
     console.log("Data for Crowdsourced: ", d);
     var data = d.rows;
-    
+
+    var conversion = document.getElementById('conversion').value;
+
+    for (var i = 0; i < data.length; i++) {
+	data[i][0] = data[i][0] / conversion * 1000.0;
+    }
+    console.log("after conversion: ", data);
+
     function boink(data) {
     	return $.ajax({
     	    url:"/sign",
@@ -143,10 +150,12 @@ function dataHandler2(d) {
 	});
     }
 
-    var model_choice = document.getElementById('model').value
+    var model_choice = document.getElementById('model').value;
 
-    var choose = boink({data: JSON.stringify(data), choice: JSON.stringify(model_choice)})
-	.done(function(sign) {
+    var choose = boink({
+	data: JSON.stringify(data), 
+	choice: JSON.stringify(model_choice)
+    }).done(function(sign) {
 	    
 	    console.log('(Citizen Data) / (Smoothed Government Data): ', sign['result']);
 	    console.log('Leave one out cross validation MSE: ', sign['cv_results']);
@@ -201,20 +210,6 @@ function dataHandler2(d) {
 		    
 		}(i, data));
 	    }
-
-	    var both_data = data.map(function(v, i) { return [v[1], sign['result'][i]]; }).
-		sort(function(a, b) { return a[0] - b[0] });
-	    console.log(both_data);
-
-	    $(function () {
-	     	$('#brisChart').gchart({
-	     	    type: 'lineXY', minValue: 0, maxValue: 40,
-	     	    title: 'blablabla', titleColor: 'black', 
-	     	    backgroundColor: $.gchart.gradient('horizontal', 'ffffff', 'ffffff'), 
-	     	    series: $.gchart.seriesForXYLines([$.gchart.series('Result', both_data.slice(1,40))]),
-	     	    legend: 'right'
-	     	});
-	    });
 	    
 	});
 
